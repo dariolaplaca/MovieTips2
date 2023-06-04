@@ -25,6 +25,7 @@ public class MovieController {
     public MovieController(MovieRepository movieRepository, MovieService movieService){
         this.movieRepository = movieRepository;
         this.movieService = movieService;
+        api_key = System.getenv("TMBD_API_KEY");
     }
 
     @GetMapping("/{id}")
