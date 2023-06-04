@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import com.gruppo4java11.MovieTips.security.Tokens;
 
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
+    String api_key;
     @Autowired
     private MovieRepository movieRepository;
     @Autowired
@@ -69,7 +69,7 @@ public class MovieController {
                 .url(url)
                 .get()
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", Tokens.getApi_key())
+                .addHeader("Authorization", "Bearer " + api_key)
                 .build();
 
         System.out.println(url);
@@ -82,12 +82,11 @@ public class MovieController {
     @GetMapping("/now-playing")
     public ResponseEntity<String> nowPlayingInTheaters() throws IOException {
         OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
                 .url("https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1&region=US")
                 .get()
                 .addHeader("accept", "application/json")
-                .addHeader("Authorization", Tokens.getApi_key())
+                .addHeader("Authorization", "Bearer " + api_key)
                 .build();
 
         Response response = client.newCall(request).execute();
