@@ -61,36 +61,37 @@ public class MovieController {
     }
 
     @GetMapping("/tmdb/{name}")
-    public ResponseEntity<String> getMovieFromTMDB(@PathVariable String name) throws IOException {
-        Integer tmbdId = movieService.getTMDBIdByName(name);
-        OkHttpClient client = new OkHttpClient();
-        String url = "https://api.themoviedb.org/3/movie/" + tmbdId + "?language=en-US";
-
-        Request request = new Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer " + api_key)
-                .build();
-
-        System.out.println(url);
-        Response response = client.newCall(request).execute();
+    public ResponseEntity<String> getMovieFromTMDB(@PathVariable String name){
+        Response response = movieService.getMovieFromTMDBByName(name);
         System.out.println(response.body());
-        assert response.body() != null;
-        return ResponseEntity.ok(response.body().string());
+        String body = "Something went wrong";
+        try{
+            assert response.body() != null;
+            body = response.body().string();
+        }catch (IOException ioException){
+            System.err.println("IOException");
+            ioException.printStackTrace();
+        } catch (NullPointerException nullPointerException){
+            System.err.println("NullPointerException");
+            nullPointerException.printStackTrace();
+        }
+        return ResponseEntity.ok(body);
     }
 
     @GetMapping("/now-playing")
-    public ResponseEntity<String> nowPlayingInTheaters() throws IOException {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1&region=US")
-                .get()
-                .addHeader("accept", "application/json")
-                .addHeader("Authorization", "Bearer " + api_key)
-                .build();
-
-        Response response = client.newCall(request).execute();
-        return ResponseEntity.ok(response.body().string());
+    public ResponseEntity<String> nowPlayingInTheaters(){
+        Response response = movieService.nowPlayingInTheaters();
+        String body = "Something went wrong";
+        try{
+            assert response.body() != null;
+            body = response.body().string();
+        }catch (IOException ioException){
+            System.err.println("IOException");
+            ioException.printStackTrace();
+        } catch (NullPointerException nullPointerException){
+            System.err.println("NullPointerException");
+            nullPointerException.printStackTrace();
+        }
+        return ResponseEntity.ok(body);
     }
 }
