@@ -6,9 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 //TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table
 public class Favorites {
@@ -20,4 +17,36 @@ public class Favorites {
     @Column(nullable = false)
     private Integer TMDB_ID;
 
+    public Favorites(Long id, Account account, Integer TMDB_ID) {
+        this.id = id;
+        this.account = account;
+        this.TMDB_ID = TMDB_ID;
+    }
+
+    public Favorites() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Integer getTMDB_ID() {
+        return TMDB_ID;
+    }
+
+    public void setTMDB_ID(Integer TMDB_ID) {
+        this.TMDB_ID = TMDB_ID;
+    }
 }
