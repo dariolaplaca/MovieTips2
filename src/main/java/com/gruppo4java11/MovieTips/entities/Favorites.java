@@ -1,20 +1,17 @@
 package com.gruppo4java11.MovieTips.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 //TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Entity
-@Table
+@Table(name = "favorites")
 public class Favorites {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
     private Account account;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "tmdb_id")
     private Integer TMDB_ID;
 
     public Favorites(Long id, Account account, Integer TMDB_ID) {
