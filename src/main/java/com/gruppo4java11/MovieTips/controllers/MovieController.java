@@ -1,12 +1,13 @@
 package com.gruppo4java11.MovieTips.controllers;
 
 import com.gruppo4java11.MovieTips.entities.Movie;
+import com.gruppo4java11.MovieTips.exceptionHandler.MovieErrorResponse;
+import com.gruppo4java11.MovieTips.exceptionHandler.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import com.gruppo4java11.MovieTips.services.MovieService;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +31,9 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public Movie getMovie(@PathVariable long id){
+        if(movieRepository.findById(id).equals(null)){
+            throw new MovieNotFoundException("Movie id not found" + id);
+        }
        return movieRepository.findById(id).orElse(null);
     }
 
@@ -93,5 +97,16 @@ public class MovieController {
             nullPointerException.printStackTrace();
         }
         return ResponseEntity.ok(body);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<MovieErrorResponse> movieHandlerException(MovieNotFoundException mne){
+
+        MovieErrorResponse errorResponse = new MovieErrorResponse();
+        errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
+        errorResponse.setMessageError(mne.getMessage());
+        errorResponse.setTimeStamp(System.currentTimeMillis());
+
+        return new ResponseEntity<>(errorResponse,HttpStatus.NOT_FOUND);
     }
 }

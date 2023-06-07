@@ -1,6 +1,7 @@
 package com.gruppo4java11.MovieTips.controllers;
 
 import com.gruppo4java11.MovieTips.entities.Account;
+import com.gruppo4java11.MovieTips.exceptionHandler.AccountNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class AccountController {
 
     @GetMapping("/{id}")
     public Optional<Account> getAccount(@PathVariable long id) {
+        if(accountRepository.findById(id).equals(null)){
+            throw new AccountNotFoundException("Account id not found"+ id);        }
         return accountRepository.findById(id);
     }
 
@@ -68,5 +71,4 @@ public class AccountController {
         accountRepository.deleteAll();
         return ResponseEntity.ok("Deleted all the Accounts!");
     }
-
 }
