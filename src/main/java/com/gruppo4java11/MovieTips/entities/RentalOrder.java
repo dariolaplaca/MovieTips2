@@ -1,5 +1,6 @@
 package com.gruppo4java11.MovieTips.entities;
 
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -7,7 +8,7 @@ import java.time.LocalDate;
 //TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Entity
 @Table
-public class RentalOrder {
+public class RentalOrder extends Record{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -23,6 +24,7 @@ public class RentalOrder {
     private String orderStatus;
 
     public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus) {
+        super(RecordStatus.ACTIVE);
         this.id = id;
         this.movie = movie;
         this.account = account;

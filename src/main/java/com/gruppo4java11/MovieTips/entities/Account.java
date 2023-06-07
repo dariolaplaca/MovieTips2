@@ -1,5 +1,6 @@
 package com.gruppo4java11.MovieTips.entities;
 
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "account")
-public class Account {
+public class Account extends Record{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -30,6 +31,7 @@ public class Account {
     private String userRole;
 
     public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole) {
+        super(RecordStatus.ACTIVE);
         this.id = id;
         this.name = name;
         this.surname = surname;

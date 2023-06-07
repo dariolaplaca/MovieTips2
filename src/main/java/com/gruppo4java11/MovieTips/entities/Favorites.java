@@ -1,11 +1,12 @@
 package com.gruppo4java11.MovieTips.entities;
 
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 
 //TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Entity
 @Table(name = "favorites")
-public class Favorites {
+public class Favorites extends Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,6 +16,7 @@ public class Favorites {
     private Integer TMDB_ID;
 
     public Favorites(Long id, Account account, Integer TMDB_ID) {
+        super(RecordStatus.ACTIVE);
         this.id = id;
         this.account = account;
         this.TMDB_ID = TMDB_ID;
