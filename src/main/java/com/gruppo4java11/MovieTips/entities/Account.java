@@ -18,13 +18,13 @@ public class Account {
     private long id;
     @Column(nullable = false, name = "name")
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "surname")
     private String surname;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "email")
     private String email;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
     private String password;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "birthday")
     private LocalDate birthday;
     @Column(nullable = false, name = "user_role")
     private String userRole;
