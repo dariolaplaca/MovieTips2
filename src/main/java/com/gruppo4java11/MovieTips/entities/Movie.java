@@ -18,8 +18,8 @@ public class Movie extends Record{
     @Column(name = "stock_quantity")
     private int stockQuantity;
 
-    public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity) {
-        super(RecordStatus.ACTIVE);
+    public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity, RecordStatus recordStatus) {
+        super(recordStatus);
         this.id = id;
         this.name = name;
         this.tmbdId = tmbdId;

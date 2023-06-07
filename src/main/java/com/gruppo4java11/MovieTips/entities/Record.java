@@ -2,6 +2,8 @@ package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 
 /**
@@ -10,6 +12,7 @@ import jakarta.persistence.MappedSuperclass;
 @MappedSuperclass
 public class Record {
     @Column(name = "record_status")
+    @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
 
     public Record(RecordStatus recordStatus){

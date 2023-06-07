@@ -15,9 +15,15 @@ public class Favorites extends Record {
     @Column(nullable = false, name = "tmdb_id")
     private Integer TMDB_ID;
 
-    public Favorites(Long id, Account account, Integer TMDB_ID) {
-        super(RecordStatus.ACTIVE);
+    public Favorites(Long id, Account account, Integer TMDB_ID, RecordStatus recordStatus) {
+        super(recordStatus);
         this.id = id;
+        this.account = account;
+        this.TMDB_ID = TMDB_ID;
+    }
+
+    public Favorites(Account account, Integer TMDB_ID, RecordStatus recordStatus) {
+        super(recordStatus);
         this.account = account;
         this.TMDB_ID = TMDB_ID;
     }

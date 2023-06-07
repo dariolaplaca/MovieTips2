@@ -1,6 +1,9 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.Favorites;
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
+import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.repositories.FavoritesRepository;
 import com.gruppo4java11.MovieTips.services.FavoritesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,9 @@ import java.util.List;
 public class FavoritesController {
     @Autowired
     private FavoritesRepository favoritesRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
     private FavoritesService favoritesService;
 
     public FavoritesController(FavoritesRepository favoritesRepository, FavoritesService favoritesService) {
@@ -31,8 +37,10 @@ public class FavoritesController {
         return favoritesRepository.findAll();
     }
 
-    @PostMapping
-    public ResponseEntity<String> createFavorites(@RequestBody Favorites favorites) {
+    @PostMapping("/{account_id}")
+    public ResponseEntity<String> createFavorites(@RequestParam int tmdb_id, @PathVariable long account_id) {
+        Account account = accountRepository.findById(account_id).orElseThrow();
+        Favorites favorites = new Favorites(account,tmdb_id, RecordStatus.ACTIVE);
         favoritesRepository.saveAndFlush(favorites);
         return ResponseEntity.ok("Favorite created successfully!");
     }
@@ -52,7 +60,12 @@ public class FavoritesController {
         return ResponseEntity.ok("Favorite removed!");
     }
 
-
-
-
+    @PatchMapping("/set-status/{id}")
+    public ResponseEntity<String> setFavoriteStatus(@PathVariable long id){
+        Favorites favoritesToChange = favoritesRepository.findById(id).orElseThrow(()-> new RuntimeException("Favorite not found!"));
+        if(favoritesToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) favoritesToChange.setRecordStatus(RecordStatus.DELETED);
+        else favoritesToChange.setRecordStatus(RecordStatus.ACTIVE);
+        favoritesRepository.updateStatusById(favoritesToChange.getRecordStatus(), id);
+        return ResponseEntity.ok("Favorite with id " + id + " Status Updated to " + favoritesToChange.getRecordStatus());
+    }
 }

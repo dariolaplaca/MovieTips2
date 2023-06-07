@@ -22,8 +22,8 @@ public class RentalOrder extends Record{
     @Column(nullable = false, name = "order_status")
     private String orderStatus;
 
-    public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus) {
-        super(RecordStatus.ACTIVE);
+    public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus, RecordStatus recordStatus) {
+        super(recordStatus);
         this.id = id;
         this.movie = movie;
         this.account = account;

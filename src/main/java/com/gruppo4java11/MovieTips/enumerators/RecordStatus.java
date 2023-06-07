@@ -13,4 +13,8 @@ public enum RecordStatus {
         return this.status;
     }
 
+    @Override
+    public String toString() {
+        return status;
+    }
 }

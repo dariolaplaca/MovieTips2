@@ -30,8 +30,8 @@ public class Account extends Record{
     @Column(nullable = false, name = "user_role")
     private String userRole;
 
-    public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole) {
-        super(RecordStatus.ACTIVE);
+    public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole, RecordStatus recordStatus) {
+        super(recordStatus);
         this.id = id;
         this.name = name;
         this.surname = surname;
