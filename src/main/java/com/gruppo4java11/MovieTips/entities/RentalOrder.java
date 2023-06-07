@@ -5,9 +5,8 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-//TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Entity
-@Table
+@Table(name = "rental_order")
 public class RentalOrder extends Record{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,11 +15,11 @@ public class RentalOrder extends Record{
     private Movie movie;
     @ManyToOne
     private Account account;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "order_time")
     private LocalDate orderTime;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "return_time")
     private LocalDate returnTime;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "order_status")
     private String orderStatus;
 
     public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus) {
