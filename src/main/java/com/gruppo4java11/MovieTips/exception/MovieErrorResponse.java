@@ -1,4 +1,4 @@
-package com.gruppo4java11.MovieTips.exceptionHandler;
+package com.gruppo4java11.MovieTips.exception;
 
 public class MovieErrorResponse {
     private int status;

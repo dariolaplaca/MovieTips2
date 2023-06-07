@@ -1,8 +1,8 @@
 package com.gruppo4java11.MovieTips.controllers;
 
 import com.gruppo4java11.MovieTips.entities.Movie;
-import com.gruppo4java11.MovieTips.exceptionHandler.MovieErrorResponse;
-import com.gruppo4java11.MovieTips.exceptionHandler.MovieNotFoundException;
+import com.gruppo4java11.MovieTips.exception.MovieErrorResponse;
+import com.gruppo4java11.MovieTips.exception.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import com.gruppo4java11.MovieTips.services.MovieService;
 import okhttp3.Response;

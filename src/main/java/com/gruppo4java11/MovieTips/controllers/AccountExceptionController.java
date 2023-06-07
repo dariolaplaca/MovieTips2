@@ -1,7 +1,7 @@
 package com.gruppo4java11.MovieTips.controllers;
 
-import com.gruppo4java11.MovieTips.exceptionHandler.AccountErrorResponse;
-import com.gruppo4java11.MovieTips.exceptionHandler.AccountNotFoundException;
+import com.gruppo4java11.MovieTips.exception.AccountErrorResponse;
+import com.gruppo4java11.MovieTips.exception.AccountNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
