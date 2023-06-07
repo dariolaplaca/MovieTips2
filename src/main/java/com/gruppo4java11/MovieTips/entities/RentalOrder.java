@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+//TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

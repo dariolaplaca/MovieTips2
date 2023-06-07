@@ -7,16 +7,21 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+//TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
+//TODO Aggiungere le column name e table name
+//TODO Creare un enumerato per lo record status con (D, A)
+//TODO Vedere filtro globale o query custom per il where
+//TODO Auditable Interface createdBy, createdOn, modifyBy, modifyOn (Account and LocalDate)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "name")
     private String name;
     @Column(nullable = false)
     private String surname;
@@ -26,7 +31,7 @@ public class Account {
     private String password;
     @Column(nullable = false)
     private LocalDate birthday;
-    @Column(nullable = false)
-    private String UserRole;
+    @Column(nullable = false, name = "user_role")
+    private String userRole;
 }
 

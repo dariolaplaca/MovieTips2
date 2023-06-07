@@ -30,6 +30,7 @@ public class FavoritesController {
     public List<Favorites> getAllFavorites() {
         return favoritesRepository.findAll();
     }
+
     @PostMapping
     public ResponseEntity<String> createFavorites(@RequestBody Favorites favorites) {
         favoritesRepository.saveAndFlush(favorites);
