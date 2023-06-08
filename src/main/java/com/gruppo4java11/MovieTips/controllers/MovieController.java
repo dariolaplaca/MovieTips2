@@ -1,6 +1,8 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.gruppo4java11.MovieTips.entities.Favorites;
 import com.gruppo4java11.MovieTips.entities.Movie;
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.exception.MovieErrorResponse;
 import com.gruppo4java11.MovieTips.exception.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
@@ -67,7 +69,6 @@ public class MovieController {
     @GetMapping("/tmdb/{name}")
     public ResponseEntity<String> getMovieFromTMDB(@PathVariable String name){
         Response response = movieService.getMovieFromTMDBByName(name);
-        System.out.println(response.body());
         String body = "Something went wrong";
         try{
             assert response.body() != null;
@@ -97,6 +98,15 @@ public class MovieController {
             nullPointerException.printStackTrace();
         }
         return ResponseEntity.ok(body);
+    }
+
+    @PatchMapping("/set-status/{id}")
+    public ResponseEntity<String> setMovieStatus(@PathVariable long id){
+        Movie movieToChange = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie not found!"));
+        if(movieToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) movieToChange.setRecordStatus(RecordStatus.DELETED);
+        else movieToChange.setRecordStatus(RecordStatus.ACTIVE);
+        movieRepository.updateStatusById(movieToChange.getRecordStatus(), id);
+        return ResponseEntity.ok("Movie with id " + id + " Status Updated to " + movieToChange.getRecordStatus());
     }
 
     @ExceptionHandler

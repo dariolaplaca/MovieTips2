@@ -75,8 +75,7 @@ public class MovieService {
                 .addHeader("accept", "application/json")
                 .addHeader("Authorization", "Bearer " + api_key)
                 .build();
-
-        System.out.println(url);
+        
         try {
             response = client.newCall(request).execute();
         } catch (IOException ioException){

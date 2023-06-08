@@ -1,6 +1,8 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.RentalOrder;
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.RentalOrderRepository;
 import com.gruppo4java11.MovieTips.services.RentalOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rentalorder")
+@RequestMapping("/order")
 public class RentalOrderController {
 
     @Autowired
@@ -55,5 +57,12 @@ public class RentalOrderController {
         return ResponseEntity.ok("Order deleted!");
     }
 
-
+    @PatchMapping("/set-status/{id}")
+    public ResponseEntity<String> setAccountStatus(@PathVariable long id){
+        RentalOrder rentalOrderToChange = rentalOrderRepository.findById(id).orElseThrow(()-> new RuntimeException("Order not found!"));
+        if(rentalOrderToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) rentalOrderToChange.setRecordStatus(RecordStatus.DELETED);
+        else rentalOrderToChange.setRecordStatus(RecordStatus.ACTIVE);
+        rentalOrderRepository.updateStatusById(rentalOrderToChange.getRecordStatus(), id);
+        return ResponseEntity.ok("Order with id " + id + " Status Updated to " + rentalOrderToChange.getRecordStatus());
+    }
 }

@@ -1,6 +1,8 @@
 package com.gruppo4java11.MovieTips.controllers;
 
 import com.gruppo4java11.MovieTips.entities.Account;
+import com.gruppo4java11.MovieTips.entities.Movie;
+import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.exception.AccountNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.services.AccountService;
@@ -74,4 +76,14 @@ public class AccountController {
         accountRepository.deleteAll();
         return ResponseEntity.ok("Deleted all the Accounts!");
     }
+
+    @PatchMapping("/set-status/{id}")
+    public ResponseEntity<String> setAccountStatus(@PathVariable long id){
+        Account accountToChange = accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not found!"));
+        if(accountToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) accountToChange.setRecordStatus(RecordStatus.DELETED);
+        else accountToChange.setRecordStatus(RecordStatus.ACTIVE);
+        accountRepository.updateStatusById(accountToChange.getRecordStatus(), id);
+        return ResponseEntity.ok("Account with id " + id + " Status Updated to " + accountToChange.getRecordStatus());
+    }
+
 }

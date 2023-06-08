@@ -15,6 +15,7 @@ public class Record {
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
 
+
     public Record(RecordStatus recordStatus){
         this.recordStatus = recordStatus;
     }
