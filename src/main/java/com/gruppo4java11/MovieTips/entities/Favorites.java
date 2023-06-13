@@ -3,7 +3,6 @@ package com.gruppo4java11.MovieTips.entities;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 
-//TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
 @Entity
 @Table(name = "favorites")
 public class Favorites extends Record {

@@ -33,10 +33,10 @@ public class MovieController {
 
     @GetMapping("/{id}")
     public Movie getMovie(@PathVariable long id){
-        if(movieRepository.findById(id).equals(null)){
+        if(movieRepository.findById(id).get().equals(null)){
             throw new MovieNotFoundException("Movie id not found" + id);
         }
-       return movieRepository.findById(id).orElse(null);
+       return movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie Not Found!"));
     }
 
     @GetMapping("/all")

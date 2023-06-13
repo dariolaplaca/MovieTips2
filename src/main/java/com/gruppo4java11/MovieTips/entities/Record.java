@@ -9,6 +9,8 @@ import jakarta.persistence.MappedSuperclass;
 /**
  * This class it's the parent class of all the entities in the database
  */
+
+//TODO Aggiungere Auditables (ModifiedBy, CreatedBy, ModifiedOn, CreatedOn) alla classe, chiedere a Michele per ModifiedBy, CreatedBy
 @MappedSuperclass
 public class Record {
     @Column(name = "record_status")

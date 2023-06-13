@@ -5,12 +5,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
-//TODO Rimuovere Lombok ed utilizzare getter setter e costruttori
-//TODO Aggiungere le column name e table name
-//TODO Creare un enumerato per lo record status con (D, A)
-//TODO Vedere filtro globale o query custom per il where
-//TODO Auditable Interface createdBy, createdOn, modifyBy, modifyOn (Account and LocalDate)
-
 @Entity
 @Table(name = "account")
 public class Account extends Record{
