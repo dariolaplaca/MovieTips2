@@ -11,10 +11,16 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
+/**
+ * Repository of Favorites entity
+ */
 @Repository
 public interface FavoritesRepository extends JpaRepository<Favorites,Long> {
-
+    /**
+     * Custom query for searching and set active or deleted records from Favorites table records
+     * @param recordStatus Logical status of the Favorites recod
+     * @param id id reference to database from Favorites table
+     */
     @Transactional
     @Modifying(flushAutomatically = true)
     @Query(value = "update Favorites SET recordStatus = :recordStatus WHERE id = :id")

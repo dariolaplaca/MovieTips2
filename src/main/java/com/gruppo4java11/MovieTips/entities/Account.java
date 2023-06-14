@@ -31,12 +31,12 @@ public class Account extends Record{
      * Constructor for Account class
      * @param id id reference to database
      * @param name Name of the user
-     * @param surname
-     * @param email
-     * @param password
-     * @param birthday
-     * @param userRole
-     * @param recordStatus
+     * @param surname Surname of the user
+     * @param email Email of the user
+     * @param password Password of the user
+     * @param birthday Birthday of the user
+     * @param userRole Role privileges of the user
+     * @param recordStatus Logical status of the user recod
      */
     public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole, RecordStatus recordStatus) {
         super(recordStatus);

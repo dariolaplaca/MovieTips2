@@ -8,10 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
+/**
+ * Repository of RentalOrder entity
+ */
 @Repository
 public interface RentalOrderRepository extends JpaRepository<RentalOrder, Long> {
-
+    /**
+     * Custom query for searching and set active or deleted records from RentalOrder table records
+     * @param recordStatus Logical status of the RentalOrder recod
+     * @param id id reference to database from RentalOrder table
+     */
     @Transactional
     @Modifying(flushAutomatically = true)
     @Query(value = "update RentalOrder SET recordStatus = :recordStatus WHERE id = :id")

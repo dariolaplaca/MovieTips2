@@ -9,8 +9,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 //TODO Fare filtri globali che ispezionino solo i record active (A)
+/**
+ * Repository of Movie entity
+ */
 public interface MovieRepository extends JpaRepository<Movie, Long> {
-
+    /**
+     * Custom query for searching and set active or deleted records from Movie table records
+     * @param recordStatus Logical status of the Movie recod
+     * @param id id reference to database from Movie table
+     */
     @Transactional
     @Modifying(flushAutomatically = true)
     @Query(value = "update Movie SET recordStatus = :recordStatus WHERE id = :id")
