@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * Account class representing all the users of our application
+ */
 @Entity
 @Table(name = "account")
 public class Account extends Record{
@@ -24,6 +27,17 @@ public class Account extends Record{
     @Column(nullable = false, name = "user_role")
     private String userRole;
 
+    /**
+     * Constructor for Account class
+     * @param id id reference to database
+     * @param name Name of the user
+     * @param surname
+     * @param email
+     * @param password
+     * @param birthday
+     * @param userRole
+     * @param recordStatus
+     */
     public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole, RecordStatus recordStatus) {
         super(recordStatus);
         this.id = id;

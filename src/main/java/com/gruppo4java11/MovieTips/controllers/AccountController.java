@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller of the account entities
+ */
 @RestController
 @RequestMapping("/account")
 public class AccountController {
@@ -26,6 +29,11 @@ public class AccountController {
         this.accountService = accountService;
     }
 
+    /**
+     * This mapping is for the insertion of a new account in the database
+     * @param account account to add in the database
+     * @return Response Entity of String depending on the http status
+     */
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
         accountRepository.saveAndFlush(account);
