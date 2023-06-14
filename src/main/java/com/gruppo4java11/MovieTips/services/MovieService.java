@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Class that include all the Services and function of the Movie entity
+ */
 @Service
 public class MovieService {
     @Autowired
@@ -25,6 +28,12 @@ public class MovieService {
 
     //TODO Rimuovere eccezioni
     //TODO Non utilizzare mappe ma creare oggetti per
+
+    /**
+     * This function retrieve the TMDB id from the map based on the name of the movie
+     * @param name name of the movie
+     * @return the id related to the name
+     */
     public Integer getTMDBIdByName(String name){
         Map<String, Integer> movieMap = getMovieList();
         Optional<Integer> movieId;
@@ -33,6 +42,10 @@ public class MovieService {
         else throw new IllegalArgumentException("Id Not Found!");
     }
 
+    /**
+     * This function read the json containing all the names and ids of the movies present in the external api and save them in a map
+     * @return a map containing all the name of the movie as key and their corresponding id as values
+     */
     public Map<String, Integer> getMovieList(){
         Map<String, Integer> movieMap = new HashMap<>();
         try {
@@ -46,6 +59,10 @@ public class MovieService {
         return movieMap;
     }
 
+    /**
+     * This function make an external API call to the TMDB database to retrieve all the movies currently in theaters
+     * @return a Response containing a json with all the movies currently in theaters
+     */
     public Response nowPlayingInTheaters() {
         String api_key = System.getenv("TMDB_API_KEY");
         OkHttpClient client = new OkHttpClient();
@@ -65,6 +82,11 @@ public class MovieService {
         return response;
     }
 
+    /**
+     * This function make an external API call to the TMDB database to retrieve all the info of a movie
+     * @param movieName the name of the movie to search
+     * @return a Response containing a json containing all the movie's info
+     */
     public Response getMovieFromTMDBByName(String movieName){
         Integer tmbdId = getTMDBIdByName(movieName);
         OkHttpClient client = new OkHttpClient();

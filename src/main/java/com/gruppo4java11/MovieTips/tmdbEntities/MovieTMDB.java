@@ -9,14 +9,23 @@ import java.util.List;
 public class MovieTMDB {
     private String title;
     private Integer id;
-    //TODO aggiungere modificatore di accesso
-    List<Genre> genres;
+    private List<Genre> genres;
     private String description;
     private LocalDate releaseDate;
     private String tagLine;
     private String posterPath;
 
-
+    /**
+     * Constructor of the TMDB Movie
+     * @param title movie title
+     * @param id tmdb id
+     * @param genres genre of the movie
+     * @param description description of the movie
+     * @param releaseDate release date of the movie
+     * @param tagLine line in the poster of the movie
+     * @param posterPath path of the poster image
+     * Link to get the poster image: https://image.tmdb.org/t/p/original/{posterPathUrl}
+     */
     public MovieTMDB(String title, int id, List<Genre> genres, String description, LocalDate releaseDate, String tagLine, String posterPath) {
         this.title = title;
         this.id = id;
@@ -24,7 +33,7 @@ public class MovieTMDB {
         this.description = description;
         this.releaseDate = releaseDate;
         this.tagLine = tagLine;
-        this.posterPath = posterPath;  //https://image.tmdb.org/t/p/original/{posterPathUrl}
+        this.posterPath = posterPath;
     }
 
     public MovieTMDB() {
@@ -38,11 +47,11 @@ public class MovieTMDB {
         this.title = title;
     }
 
-    public int getTmdb_id() {
+    public int getId() {
         return this.id;
     }
 
-    public void setTmdb_id(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -76,6 +85,14 @@ public class MovieTMDB {
 
     public void setTagLine(String tagLine) {
         this.tagLine = tagLine;
+    }
+
+    public String getPosterPath() {
+        return this.posterPath;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 }
 

@@ -1,9 +1,17 @@
 package com.gruppo4java11.MovieTips.tmdbEntities;
 
+/**
+ * Genre class containing the name of the genre and the TMDB genre id of our Tmdb Movies
+ */
 public class Genre {
     private int id;
     private String name;
 
+    /**
+     *
+     * @param id tmdb id of the genre
+     * @param name name of the genre
+     */
     public Genre(int id, String name) {
         this.id = id;
         this.name = name;
