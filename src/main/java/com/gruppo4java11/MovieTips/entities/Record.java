@@ -10,16 +10,16 @@ import jakarta.persistence.MappedSuperclass;
  * This class it's the parent class of all the entities in the database
  */
 
-//TODO Aggiungere Auditables (ModifiedBy, CreatedBy, ModifiedOn, CreatedOn) alla classe, chiedere a Michele per ModifiedBy, CreatedBy
+//TODO Aggiungere Auditables (ModifiedBy, CreatedBy, ModifiedOn, CreatedOn) Strings e LocalDates
+    //TODO cambiare nome classe in AuditableEntity
 @MappedSuperclass
 public class Record {
     @Column(name = "record_status")
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
-
-
+    //TODO aggiungere .getValue() appena creato
     public Record(RecordStatus recordStatus){
-        this.recordStatus = recordStatus;
+        this.recordStatus = RecordStatus.ACTIVE;
     }
     public Record(){}
 

@@ -17,12 +17,14 @@ import java.util.Optional;
 @Service
 public class MovieService {
     @Autowired
-    MovieRepository movieRepository;
+    private MovieRepository movieRepository;
 
     public MovieService(MovieRepository movieRepository){
         this.movieRepository = movieRepository;
     }
 
+    //TODO Rimuovere eccezioni
+    //TODO Non utilizzare mappe ma creare oggetti per
     public Integer getTMDBIdByName(String name){
         Map<String, Integer> movieMap = getMovieList();
         Optional<Integer> movieId;

@@ -31,9 +31,10 @@ public class MovieController {
         api_key = System.getenv("TMBD_API_KEY");
     }
 
+    //TODO Ritornare un response entity
     @GetMapping("/{id}")
     public Movie getMovie(@PathVariable long id){
-        if(movieRepository.findById(id).get().equals(null)){
+        if(movieRepository.findById(id).isPresent()){
             throw new MovieNotFoundException("Movie id not found" + id);
         }
        return movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie Not Found!"));

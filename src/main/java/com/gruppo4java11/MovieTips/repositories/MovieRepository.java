@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+//TODO Fare filtri globali che ispezionino solo i record active (A)
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     @Transactional

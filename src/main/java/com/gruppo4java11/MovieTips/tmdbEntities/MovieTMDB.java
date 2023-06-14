@@ -8,7 +8,8 @@ import java.util.List;
  */
 public class MovieTMDB {
     private String title;
-    private int tmdb_id;
+    private Integer id;
+    //TODO aggiungere modificatore di accesso
     List<Genre> genres;
     private String description;
     private LocalDate releaseDate;
@@ -16,9 +17,9 @@ public class MovieTMDB {
     private String posterPath;
 
 
-    public MovieTMDB(String title, int tmdb_id, List<Genre> genres, String description, LocalDate releaseDate, String tagLine, String posterPath) {
+    public MovieTMDB(String title, int id, List<Genre> genres, String description, LocalDate releaseDate, String tagLine, String posterPath) {
         this.title = title;
-        this.tmdb_id = tmdb_id;
+        this.id = id;
         this.genres = genres;
         this.description = description;
         this.releaseDate = releaseDate;
@@ -38,11 +39,11 @@ public class MovieTMDB {
     }
 
     public int getTmdb_id() {
-        return this.tmdb_id;
+        return this.id;
     }
 
-    public void setTmdb_id(int tmdb_id) {
-        this.tmdb_id = tmdb_id;
+    public void setTmdb_id(int id) {
+        this.id = id;
     }
 
     public List<Genre> getGenres() {
