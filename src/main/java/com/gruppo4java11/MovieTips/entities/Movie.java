@@ -3,6 +3,9 @@ package com.gruppo4java11.MovieTips.entities;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 
+/**
+ * Movie class representing all the movies within our application's database
+ */
 @Entity
 @Table (name = "movie")
 public class Movie extends Record{
@@ -12,12 +15,21 @@ public class Movie extends Record{
     @Column(nullable = false, name = "name")
     private String name;
     @Column(nullable = false, unique = true, name = "tmdb_id")
-    private int tmbdId;
+    private Integer tmbdId;
     @Column(nullable = false, name = "cost_per_day")
-    private double costPerDay;
+    private Double costPerDay;
     @Column(name = "stock_quantity")
-    private int stockQuantity;
+    private Integer stockQuantity;
 
+    /**
+     *Constructor for the Movie class
+     * @param id id that references movies in the database
+     * @param name name of the movie in the databse or in "stock"
+     * @param tmbdId ID reference of our external API (database that has all the SPECIFIC info of our movies)
+     * @param costPerDay daily cost for renting the movie
+     * @param stockQuantity how many of each movie we have in "stock" in our "storefront"
+     * @param recordStatus the logical status of the movie with our DB i.e: Active or Deleted
+     */
     public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity, RecordStatus recordStatus) {
         super(recordStatus);
         this.id = id;

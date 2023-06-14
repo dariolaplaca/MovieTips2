@@ -7,7 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 
 /**
- * This class it's the parent class of all the entities in the database
+ * This class is the parent class of all the entities in the database
  */
 
 //TODO Aggiungere Auditables (ModifiedBy, CreatedBy, ModifiedOn, CreatedOn) Strings e LocalDates
@@ -18,6 +18,12 @@ public class Record {
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
     //TODO aggiungere .getValue() appena creato
+
+    /**
+     * Constructor for the Record Superclass
+     * @param recordStatus hardCoded as Active because every time we retrieve this object, we can only retrieve active objects and not Deleted objects from the database OR
+     *                     at the moment of its creation
+     */
     public Record(RecordStatus recordStatus){
         this.recordStatus = RecordStatus.ACTIVE;
     }

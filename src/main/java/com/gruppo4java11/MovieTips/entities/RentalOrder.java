@@ -5,12 +5,16 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
+/**
+ * RentalOrder class representing all the orders that have been made in our application to
+ * rent movies.
+ */
 @Entity
 @Table(name = "rental_order")
 public class RentalOrder extends Record{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     @ManyToOne
     private Movie movie;
     @ManyToOne
@@ -22,6 +26,16 @@ public class RentalOrder extends Record{
     @Column(nullable = false, name = "order_status")
     private String orderStatus;
 
+    /**
+     * Constructor for our RentalOrder class
+     * @param id  id that references our database
+     * @param movie name of the movie that was ordered
+     * @param account account of the user that made the order
+     * @param orderTime the time in which the order was made
+     * @param returnTime the time in which the movie was returned
+     * @param orderStatus whether the movie is still in possession of the user or if it has been returned
+     * @param recordStatus the logical status of the order within the DB i.e: Active or Deleted
+     */
     public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus, RecordStatus recordStatus) {
         super(recordStatus);
         this.id = id;
