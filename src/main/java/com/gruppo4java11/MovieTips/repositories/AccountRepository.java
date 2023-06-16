@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AccountRepository extends JpaRepository<Account,Long> {
     /**
      * Custom query for searching and set active or deleted records from account table records
-     * @param recordStatus Logical status of the user recod
+     * @param recordStatus Logical status of the user record
      * @param id id reference to database from Account table
      */
     @Transactional

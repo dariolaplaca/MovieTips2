@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "account")
-public class Account extends Record{
+public class Account extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -38,7 +38,7 @@ public class Account extends Record{
      * @param password Password of the user
      * @param birthday Birthday of the user
      * @param userRole Role privileges of the user
-     * @param recordStatus Logical status of the user recod
+     * @param recordStatus Logical status of the user record
      */
     public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole, RecordStatus recordStatus) {
         super(recordStatus);

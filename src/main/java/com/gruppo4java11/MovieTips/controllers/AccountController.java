@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +36,11 @@ public class AccountController {
      * @return Response Entity of String depending on the http status
      */
     @PostMapping("/create")
-    public ResponseEntity<String> createAccount(@RequestBody Account account) {
+    public ResponseEntity<String> createAccount(@RequestBody Account account, @RequestParam String username) {
+        account.setCreatedOn(LocalDate.now());
+        account.setCreatedBy(username);
+        account.setModifiedBy(username);
+        account.setModifiedOn(LocalDate.now());
         accountRepository.saveAndFlush(account);
         return ResponseEntity.ok("Account Created!");
     }
@@ -68,7 +73,7 @@ public class AccountController {
      * @return ResponseEntity indicating the success of the account update
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAccount(@PathVariable long id, @RequestBody Account account) {
+    public ResponseEntity<String> updateAccount(@PathVariable long id, @RequestBody Account account, @RequestParam String username) {
         Account accountFromDB = accountRepository.findById(id).orElseThrow(()->new RuntimeException("Account not found"));
         accountFromDB.setName(account.getName());
         accountFromDB.setSurname(account.getSurname());
@@ -76,6 +81,8 @@ public class AccountController {
         accountFromDB.setEmail(account.getEmail());
         accountFromDB.setPassword(account.getPassword());
         accountFromDB.setUserRole(account.getUserRole());
+        accountFromDB.setModifiedBy(username);
+        accountFromDB.setModifiedOn(LocalDate.now());
         accountRepository.saveAndFlush(accountFromDB);
         return ResponseEntity.ok("Account Updated!");
     }
@@ -113,8 +120,10 @@ public class AccountController {
      * @return  ResponseEntity containing a message indicating the updated status of the account
      */
     @PatchMapping("/set-status/{id}")
-    public ResponseEntity<String> setAccountStatus(@PathVariable long id){
+    public ResponseEntity<String> setAccountStatus(@PathVariable long id, @RequestParam String username){
         Account accountToChange = accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not found!"));
+        accountToChange.setModifiedOn(LocalDate.now());
+        accountToChange.setModifiedBy(username);
         if(accountToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) accountToChange.setRecordStatus(RecordStatus.DELETED);
         else accountToChange.setRecordStatus(RecordStatus.ACTIVE);
         accountRepository.updateStatusById(accountToChange.getRecordStatus(), id);

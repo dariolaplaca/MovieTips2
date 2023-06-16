@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface FavoritesRepository extends JpaRepository<Favorites,Long> {
     /**
      * Custom query for searching and set active or deleted records from Favorites table records
-     * @param recordStatus Logical status of the Favorites recod
+     * @param recordStatus Logical status of the Favorites record
      * @param id id reference to database from Favorites table
      */
     @Transactional

@@ -10,7 +10,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table (name = "movie")
-public class Movie extends Record{
+public class Movie extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

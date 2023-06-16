@@ -10,7 +10,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "favorites")
-public class Favorites extends Record {
+public class Favorites extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

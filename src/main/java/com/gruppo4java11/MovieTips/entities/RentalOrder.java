@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "rental_order")
-public class RentalOrder extends Record{
+public class RentalOrder extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

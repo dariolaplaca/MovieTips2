@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface RentalOrderRepository extends JpaRepository<RentalOrder, Long> {
     /**
      * Custom query for searching and set active or deleted records from RentalOrder table records
-     * @param recordStatus Logical status of the RentalOrder recod
+     * @param recordStatus Logical status of the RentalOrder record
      * @param id id reference to database from RentalOrder table
      */
     @Transactional
