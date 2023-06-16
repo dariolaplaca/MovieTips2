@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-
+/**
+ * Controller of the movie entities
+ */
 @RestController
 @RequestMapping("/movie")
 public class MovieController {
@@ -24,7 +26,10 @@ public class MovieController {
     private MovieRepository movieRepository;
     @Autowired
     private MovieService movieService;
-
+    /**
+     * @param movieRepository  the repository used for accessing and managing movies
+     * @param movieService the service using for permfoming operation of movie
+     */
     public MovieController(MovieRepository movieRepository, MovieService movieService){
         this.movieRepository = movieRepository;
         this.movieService = movieService;
@@ -32,6 +37,12 @@ public class MovieController {
     }
 
     //TODO Ritornare un response entity
+
+    /**
+     * This mapping retrieves the movies with the specified ID
+     * @param id ID of the movie to retrieve
+     * @return the movie with the specified ID, or null if not found
+     */
     @GetMapping("/{id}")
     public Movie getMovie(@PathVariable long id){
         if(movieRepository.findById(id).isPresent()){
@@ -39,18 +50,30 @@ public class MovieController {
         }
        return movieRepository.findById(id).orElseThrow(() -> new RuntimeException("Movie Not Found!"));
     }
-
+    /**
+     * This mapping retrieves all the movies from the database
+     * @return a list of the all movies in the database
+     */
     @GetMapping("/all")
     public List<Movie> getAllMovies(){
         return movieRepository.findAll();
     }
-
+    /**
+     * Create a new movie in the database
+     * @param movie movie to be created
+     * @return ResponseEntity indicating the success of the movie creation
+     */
     @PostMapping
     public ResponseEntity<String> addMovie(@RequestBody Movie movie){
         movieRepository.saveAndFlush(movie);
         return ResponseEntity.ok("Movie Added!");
     }
-
+    /**
+     * Updates the movie with the specified ID in the database
+     * @param movie the updated movie details
+     * @param id ID of the movie to update
+     * @return  ResponseEntity indicating the success of the movie update
+     */
     @PutMapping("/{id}")
     public ResponseEntity<String> updateMovie(@RequestBody Movie movie, @PathVariable long id){
         Movie movieFromDB = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie does not exist!"));
@@ -60,13 +83,21 @@ public class MovieController {
         movieRepository.saveAndFlush(movieFromDB);
         return ResponseEntity.ok("Movie updated!");
     }
-
+    /**
+     * Deletes the movie with the specified ID from the database
+     * @param id ID of the movie to delete
+     * @return  ResponseEntity indicating the success of the movie deletion
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable long id){
         movieRepository.deleteById(id);
         return ResponseEntity.ok("Movie Deleted!");
     }
-
+    /**
+     * Retrieves movie information from TMDB (The Movie Database) based on the provided movie name
+     * @param name the name of the movie to search for on TMDB
+     * @return ResponseEntity containing the movie information retrieved from TMDB
+     */
     @GetMapping("/tmdb/{name}")
     public ResponseEntity<String> getMovieFromTMDB(@PathVariable String name){
         Response response = movieService.getMovieFromTMDBByName(name);
@@ -83,7 +114,11 @@ public class MovieController {
         }
         return ResponseEntity.ok(body);
     }
-
+    /**
+     * Retrieves the list of movies currently playing in theaters
+     * @return  ResponseEntity containing the list of movies currently playing in theaters
+     * @throws IOException
+     */
     @GetMapping("/now-playing")
     public ResponseEntity<String> nowPlayingInTheaters(){
         Response response = movieService.nowPlayingInTheaters();
@@ -101,6 +136,11 @@ public class MovieController {
         return ResponseEntity.ok(body);
     }
 
+    /**
+     * Sets the status of a movie identified by the given ID
+     * @param id ID of the movie to update
+     * @return ResponseEntity containing a message indicating the updated status of the movie
+     */
     @PatchMapping("/set-status/{id}")
     public ResponseEntity<String> setMovieStatus(@PathVariable long id){
         Movie movieToChange = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie not found!"));
@@ -110,6 +150,11 @@ public class MovieController {
         return ResponseEntity.ok("Movie with id " + id + " Status Updated to " + movieToChange.getRecordStatus());
     }
 
+    /**
+     * Exception handler for handling MovieNotFoundException
+     * @param mne  The MovieNotFoundException to be handled
+     * @return  ResponseEntity containing a MovieErrorResponse indicating the error details
+     */
     @ExceptionHandler
     public ResponseEntity<MovieErrorResponse> movieHandlerException(MovieNotFoundException mne){
 

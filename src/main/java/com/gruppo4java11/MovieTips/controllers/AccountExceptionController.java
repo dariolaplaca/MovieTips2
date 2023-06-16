@@ -9,7 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class AccountExceptionController {
-    // Gestore di una singola eccezione, id non trovato
+    /**
+     * Exception handler for handling AccountNotFoundException
+     * @param anf The AccountNotFoundException to be handled
+     * @return ResponseEntity containing an AccountErrorResponse indicating the error details
+     */
     @ExceptionHandler
     public ResponseEntity<AccountErrorResponse> accountHandlerException(AccountNotFoundException anf){
 
@@ -21,7 +25,11 @@ public class AccountExceptionController {
         return new ResponseEntity<>(accountErrorResponse,HttpStatus.NOT_FOUND);
     }
 
-    // gestore globale di tutte le eccezioni
+    /**
+     * Exception handler for handling generic Exception
+     * @param exc The Exception to be handled
+     * @return ResponseEntity containing an AccountErrorResponse indicating the error details
+     */
     @ExceptionHandler
     public ResponseEntity<AccountErrorResponse> accountHandlerException(Exception exc){
 

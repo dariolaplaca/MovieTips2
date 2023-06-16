@@ -39,12 +39,19 @@ public class AccountController {
         accountRepository.saveAndFlush(account);
         return ResponseEntity.ok("Account Created!");
     }
-
+    /**
+     * This mapping retrieves all the accounts from the database
+     * @return List of accounts retrieved from the database
+     */
     @GetMapping
     public List<Account> getAllAccount() {
         return accountRepository.findAll();
     }
-
+    /**
+     * This mapping retrieves the account with the specified ID from the database
+     * @param id  ID of the account to retrieve
+     * @return Optional containing the account with the specified ID
+     */
     @GetMapping("/{id}")
     public Optional<Account> getAccount(@PathVariable long id) {
         if(accountRepository.findById(id).get().equals(null)) {
@@ -54,7 +61,12 @@ public class AccountController {
         return accountRepository.findById(id);
         }
     }
-
+    /**
+     * This mapping is for updates the account with the specified ID in the database
+     * @param id ID of the account to update
+     * @param account the updated account details
+     * @return ResponseEntity indicating the success of the account update
+     */
     @PutMapping("/{id}")
     public ResponseEntity<String> updateAccount(@PathVariable long id, @RequestBody Account account) {
         Account accountFromDB = accountRepository.findById(id).orElseThrow(()->new RuntimeException("Account not found"));
@@ -67,24 +79,39 @@ public class AccountController {
         accountRepository.saveAndFlush(accountFromDB);
         return ResponseEntity.ok("Account Updated!");
     }
-
+    /**
+     * Deletes the account with the specified ID from the database
+     * @param id Deletes the account with the specified ID from the database
+     * @return ResponseEntity indicating the success of the account deletion
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAccountById(@PathVariable long id) {
         accountRepository.deleteById(id);
         return ResponseEntity.ok("Deleted Account number: " + id);
     }
-
+    /**
+     * Deletes multiple accounts with the specified IDs from the database
+     * @param ids IDs of the accounts to delete
+     */
     @DeleteMapping("")
     public void deleteMultipleAccountsById(@PathVariable Iterable<? extends Long> ids) {
         accountRepository.deleteAllById(ids);
     }
-
+    /**
+     * Deletes all the accounts from the database
+     * @return
+     */
     @DeleteMapping("/all")
     public ResponseEntity<String> deleteAllAccounts() {
         accountRepository.deleteAll();
         return ResponseEntity.ok("Deleted all the Accounts!");
     }
 
+    /**
+     * Sets the status of an account identified by the given ID
+     * @param id ID of the account to update
+     * @return  ResponseEntity containing a message indicating the updated status of the account
+     */
     @PatchMapping("/set-status/{id}")
     public ResponseEntity<String> setAccountStatus(@PathVariable long id){
         Account accountToChange = accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not found!"));
