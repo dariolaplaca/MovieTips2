@@ -2,6 +2,7 @@ package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 
@@ -9,6 +10,7 @@ import java.time.LocalDate;
  * RentalOrder class representing all the orders that have been made in our application to
  * rent movies.
  */
+@Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "rental_order")
 public class RentalOrder extends Record{

@@ -2,10 +2,12 @@ package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 /**
  * Movie class representing all the movies within our application's database
  */
+@Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table (name = "movie")
 public class Movie extends Record{

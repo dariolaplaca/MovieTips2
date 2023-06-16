@@ -2,12 +2,14 @@ package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDate;
 
 /**
  * Account class representing all the users of our application
  */
+@Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "account")
 public class Account extends Record{

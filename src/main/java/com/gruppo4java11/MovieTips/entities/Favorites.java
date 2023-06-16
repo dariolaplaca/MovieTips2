@@ -2,10 +2,12 @@ package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
+import org.hibernate.annotations.Where;
 
 /**
  * Favorites class representing all the favorites of users in our application
  */
+@Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "favorites")
 public class Favorites extends Record {
