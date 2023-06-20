@@ -30,10 +30,8 @@ public class Movie extends AuditableEntity {
      * @param tmbdId ID reference of our external API (database that has all the SPECIFIC info of our movies)
      * @param costPerDay daily cost for renting the movie
      * @param stockQuantity how many of each movie we have in "stock" in our "storefront"
-     * @param recordStatus the logical status of the movie with our DB i.e: Active or Deleted
      */
-    public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity, RecordStatus recordStatus) {
-        super(recordStatus);
+    public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity) {
         this.id = id;
         this.name = name;
         this.tmbdId = tmbdId;

@@ -36,10 +36,8 @@ public class RentalOrder extends AuditableEntity {
      * @param orderTime the time in which the order was made
      * @param returnTime the time in which the movie was returned
      * @param orderStatus whether the movie is still in possession of the user or if it has been returned
-     * @param recordStatus the logical status of the order within the DB i.e: Active or Deleted
      */
-    public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus, RecordStatus recordStatus) {
-        super(recordStatus);
+    public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus) {
         this.id = id;
         this.movie = movie;
         this.account = account;

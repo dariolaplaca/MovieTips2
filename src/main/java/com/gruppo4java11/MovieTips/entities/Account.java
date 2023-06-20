@@ -38,10 +38,8 @@ public class Account extends AuditableEntity {
      * @param password Password of the user
      * @param birthday Birthday of the user
      * @param userRole Role privileges of the user
-     * @param recordStatus Logical status of the user record
      */
-    public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole, RecordStatus recordStatus) {
-        super(recordStatus);
+    public Account(long id, String name, String surname, String email, String password, LocalDate birthday, String userRole) {
         this.id = id;
         this.name = name;
         this.surname = surname;

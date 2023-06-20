@@ -99,7 +99,7 @@ public class MovieController {
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
     @GetMapping("/tmdb/{name}")
-    public ResponseEntity<String> getMovieFromTMDB(@PathVariable String name){
+    public ResponseEntity<String> getMovieFromTMDBByName(@PathVariable String name){
         Response response = movieService.getMovieFromTMDBByName(name);
         String body = "Something went wrong";
         try{
@@ -114,26 +114,32 @@ public class MovieController {
         }
         return ResponseEntity.ok(body);
     }
+
+    /**
+     * Retrieves movie information from TMDB (The Movie Database) based on the provided movie name
+     * @param id the name of the movie to search for on TMDB
+     * @return ResponseEntity containing the movie information retrieved from TMDB
+     */
+    @GetMapping("/tmdb/{id}")
+    public ResponseEntity<String> getMovieFromTMDBById(@PathVariable Integer id) throws IOException {
+        Response response = movieService.getMovieFromTMDBById(id);
+        if (response == null || response.body() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found!");
+        }
+        return ResponseEntity.ok( response.body().string());
+    }
+
+
     /**
      * Retrieves the list of movies currently playing in theaters
      * @return  ResponseEntity containing the list of movies currently playing in theaters
      * @throws IOException
      */
     @GetMapping("/now-playing")
-    public ResponseEntity<String> nowPlayingInTheaters(){
+    public ResponseEntity<String> nowPlayingInTheaters() throws IOException {
         Response response = movieService.nowPlayingInTheaters();
-        String body = "Something went wrong";
-        try{
-            assert response.body() != null;
-            body = response.body().string();
-        }catch (IOException ioException){
-            System.err.println("IOException");
-            ioException.printStackTrace();
-        } catch (NullPointerException nullPointerException){
-            System.err.println("NullPointerException");
-            nullPointerException.printStackTrace();
-        }
-        return ResponseEntity.ok(body);
+        assert response.body() != null;
+        return ResponseEntity.ok(response.body().string());
     }
 
     /**

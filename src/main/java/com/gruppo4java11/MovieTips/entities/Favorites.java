@@ -24,10 +24,8 @@ public class Favorites extends AuditableEntity {
      * @param id id reference to database
      * @param account id reference of account
      * @param TMDB_ID id reference of external api
-     * @param recordStatus Logical status of the user recod
      */
-    public Favorites(Long id, Account account, Integer TMDB_ID, RecordStatus recordStatus) {
-        super(recordStatus);
+    public Favorites(Long id, Account account, Integer TMDB_ID) {
         this.id = id;
         this.account = account;
         this.TMDB_ID = TMDB_ID;
@@ -36,8 +34,7 @@ public class Favorites extends AuditableEntity {
     /**
      * Same constructor for Favorites class without id
      */
-    public Favorites(Account account, Integer TMDB_ID, RecordStatus recordStatus) {
-        super(recordStatus);
+    public Favorites(Account account, Integer TMDB_ID) {
         this.account = account;
         this.TMDB_ID = TMDB_ID;
     }

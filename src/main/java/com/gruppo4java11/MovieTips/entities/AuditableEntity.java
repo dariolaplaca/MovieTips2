@@ -29,13 +29,12 @@ public class AuditableEntity {
 
     /**
      * Constructor for the Record Superclass
-     * @param recordStatus hardCoded as Active because every time we retrieve this object, we can only retrieve active objects and not Deleted objects from the database OR
+     * recordStatus is hardCoded as Active because every time we retrieve this object, we can only retrieve active objects and not Deleted objects from the database OR
      *                     at the moment of its creation
      */
-    public AuditableEntity(RecordStatus recordStatus){
+    public AuditableEntity(){
         this.recordStatus = RecordStatus.ACTIVE;
     }
-    public AuditableEntity(){}
 
     public RecordStatus getRecordStatus() {
         return this.recordStatus;

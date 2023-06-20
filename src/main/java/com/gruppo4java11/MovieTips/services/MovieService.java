@@ -1,18 +1,17 @@
 package com.gruppo4java11.MovieTips.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gruppo4java11.MovieTips.entities.Movie;
+import com.gruppo4java11.MovieTips.dto.MovieDTO;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Class that include all the Services and function of the Movie entity
@@ -26,37 +25,51 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    //TODO Rimuovere eccezioni
-    //TODO Non utilizzare mappe ma creare oggetti per
-
     /**
      * This function retrieve the TMDB id from the map based on the name of the movie
      * @param name name of the movie
      * @return the id related to the name
      */
     public Integer getTMDBIdByName(String name){
-        Map<String, Integer> movieMap = getMovieList();
-        Optional<Integer> movieId;
-        movieId = movieMap.get(name).describeConstable();
-        if(movieId.isPresent()) return movieId.get();
-        else throw new IllegalArgumentException("Id Not Found!");
+        Set<MovieDTO> movieSet = getMovieList();
+        List<MovieDTO> movieToReturn = movieSet.stream().filter(movie -> movie.getTitle().equals(name)).toList();
+        if(movieToReturn.size() == 0){
+            return -1;
+        }
+        return movieToReturn.get(0).getId();
+    }
+
+    /**
+     * This function checks if the id exists in the local json
+     * @param id tmdb id of the movie
+     * @return a boolean that checks if the id is present in the local tmdb_ids json
+     */
+    public Boolean checkIfTmdbIdIsInJson(Integer id){
+        Set<MovieDTO> movieSet = getMovieList();
+        List<MovieDTO> movieToReturn = movieSet.stream().filter(movie -> Objects.equals(movie.getId(), id)).toList();
+        return movieToReturn.size() != 0;
     }
 
     /**
      * This function read the json containing all the names and ids of the movies present in the external api and save them in a map
-     * @return a map containing all the name of the movie as key and their corresponding id as values
+     * @return a set containing all movies titles and ids stored as movie dto's
      */
-    public Map<String, Integer> getMovieList(){
-        Map<String, Integer> movieMap = new HashMap<>();
+    public Set<MovieDTO> getMovieList(){
+        Set<MovieDTO> movieSet = new HashSet<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            movieMap = mapper.readValue(Paths.get("tmdb_ids.json").toFile(), Map.class);
-            return movieMap;
+            Map<String, Integer> movieMap= mapper.readValue(Paths.get("tmdb_ids.json").toFile(), Map.class);
+            for (Map.Entry<String, Integer> entry : movieMap.entrySet()){
+                MovieDTO movieDTO = new MovieDTO();
+                movieDTO.setTitle(entry.getKey());
+                movieDTO.setId(entry.getValue());
+                movieSet.add(movieDTO);
+            }
         } catch (IOException e) {
             System.err.println("File not found!");
             e.printStackTrace();
         }
-        return movieMap;
+        return movieSet;
     }
 
     /**
@@ -89,6 +102,23 @@ public class MovieService {
      */
     public Response getMovieFromTMDBByName(String movieName){
         Integer tmbdId = getTMDBIdByName(movieName);
+        return getResponseFromTMDB(tmbdId);
+    }
+
+    /**
+     * This function make an external API call to the TMDB database to retrieve all the info of a movie
+     * @param id id of the tmdb movie
+     * @return a Response containing a json containing all the movie's info
+     */
+    public Response getMovieFromTMDBById(Integer id){
+        if(!checkIfTmdbIdIsInJson(id)){
+            return null;
+        }
+        return getResponseFromTMDB(id);
+    }
+
+    @Nullable
+    private static Response getResponseFromTMDB(Integer tmbdId) {
         OkHttpClient client = new OkHttpClient();
         Response response = null;
         String url = "https://api.themoviedb.org/3/movie/" + tmbdId + "?language=en-US";
@@ -99,7 +129,7 @@ public class MovieService {
                 .addHeader("accept", "application/json")
                 .addHeader("Authorization", "Bearer " + api_key)
                 .build();
-        
+
         try {
             response = client.newCall(request).execute();
         } catch (IOException ioException){
@@ -108,4 +138,6 @@ public class MovieService {
         }
         return response;
     }
+
+
 }
