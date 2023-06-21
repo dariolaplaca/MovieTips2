@@ -63,7 +63,7 @@ public class FavoritesController {
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
-    @PostMapping("/{account_id}/{tmdb_id}")
+    @PostMapping("/{account_id}/id/{tmdb_id}")
     public ResponseEntity<String> createFavorites(@PathVariable int tmdb_id, @PathVariable long account_id, @RequestParam String username) {
         Account account = accountRepository.findById(account_id).orElse(null);
         if(account == null){
@@ -87,7 +87,7 @@ public class FavoritesController {
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
-    @PostMapping("/{account_id}/{movieName}")
+    @PostMapping("/{account_id}/title/{movieName}")
     public ResponseEntity<String> createFavorites(@PathVariable String movieName, @PathVariable long account_id, @RequestParam String username) {
         Account account = accountRepository.findById(account_id).orElse(new Account());
         Integer TMDB_id = movieService.getTMDBIdByName(movieName);
