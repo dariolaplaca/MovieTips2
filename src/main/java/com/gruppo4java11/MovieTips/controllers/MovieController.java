@@ -98,7 +98,7 @@ public class MovieController {
      * @param name the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
-    @GetMapping("/tmdb/{name}")
+    @GetMapping("/tmdb/title/{name}")
     public ResponseEntity<String> getMovieFromTMDBByName(@PathVariable String name){
         Response response = movieService.getMovieFromTMDBByName(name);
         String body = "Something went wrong";
@@ -120,7 +120,7 @@ public class MovieController {
      * @param id the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
-    @GetMapping("/tmdb/{id}")
+    @GetMapping("/tmdb/id/{id}")
     public ResponseEntity<String> getMovieFromTMDBById(@PathVariable Integer id) throws IOException {
         Response response = movieService.getMovieFromTMDBById(id);
         if (response == null || response.body() == null) {
