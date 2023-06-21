@@ -45,9 +45,7 @@ public class MovieService {
      * @return a boolean that checks if the id is present in the local tmdb_ids json
      */
     public Boolean checkIfTmdbIdIsInJson(Integer id){
-        Set<MovieDTO> movieSet = getMovieList();
-        List<MovieDTO> movieToReturn = movieSet.stream().filter(movie -> Objects.equals(movie.getId(), id)).toList();
-        return movieToReturn.size() != 0;
+        return getMovieList().stream().anyMatch(movie -> Objects.equals(movie.getId(), id));
     }
 
     /**

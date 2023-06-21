@@ -68,7 +68,7 @@ public class FavoritesController {
         Account account = accountRepository.findById(account_id).orElse(null);
         if(account == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The account with id " + account_id + " was not found!");
-        } else if (movieService.checkIfTmdbIdIsInJson(tmdb_id)){
+        } else if (!movieService.checkIfTmdbIdIsInJson(tmdb_id)){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The movie with id " + tmdb_id + " was not found!");
         }
         Favorites favorites = new Favorites(account, tmdb_id);

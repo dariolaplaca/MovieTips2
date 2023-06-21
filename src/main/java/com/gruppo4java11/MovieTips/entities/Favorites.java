@@ -16,7 +16,7 @@ public class Favorites extends AuditableEntity {
     private Long id;
     @ManyToOne
     private Account account;
-    @Column(nullable = false, name = "tmdb_id")
+    @Column(nullable = false, name = "tmdb_id", unique = false)
     private Integer TMDB_ID;
 
     /**
