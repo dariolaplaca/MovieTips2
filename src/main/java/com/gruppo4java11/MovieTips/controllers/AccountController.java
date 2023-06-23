@@ -42,7 +42,8 @@ public class AccountController {
         account.setModifiedBy(username);
         account.setModifiedOn(LocalDate.now());
         accountRepository.saveAndFlush(account);
-        return ResponseEntity.ok("Account Created!");
+        Long highestId = accountRepository.getHighestID();
+        return ResponseEntity.ok("Account Created with id " + highestId);
     }
     /**
      * This mapping retrieves all the accounts from the database
@@ -62,9 +63,8 @@ public class AccountController {
         if(accountRepository.findById(id).isEmpty()) {
             throw new AccountNotFoundException("Account id not found" + id);
         }
-        else{
         return accountRepository.findById(id).get();
-        }
+
     }
     /**
      * This mapping is for updates the account with the specified ID in the database

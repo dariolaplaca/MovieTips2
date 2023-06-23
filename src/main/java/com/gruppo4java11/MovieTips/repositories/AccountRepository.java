@@ -24,4 +24,6 @@ public interface AccountRepository extends JpaRepository<Account,Long> {
     @Query(value = "update Account SET recordStatus = :recordStatus WHERE id = :id")
     void updateStatusById(@Param(value = "recordStatus") RecordStatus recordStatus, @Param(value = "id") Long id);
 
+    @Query(value = "select Max(id) from Account")
+    Long getHighestID();
 }

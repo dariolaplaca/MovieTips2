@@ -77,7 +77,8 @@ public class FavoritesController {
         favorites.setModifiedBy(username);
         favorites.setModifiedOn(LocalDate.now());
         favoritesRepository.saveAndFlush(favorites);
-        return ResponseEntity.ok("Favorite created successfully!");
+        Long highestId = favoritesRepository.getHighestID();
+        return ResponseEntity.ok("Favorite created successfully with id " + highestId);
     }
 
 
@@ -102,7 +103,8 @@ public class FavoritesController {
         favorites.setModifiedBy(username);
         favorites.setModifiedOn(LocalDate.now());
         favoritesRepository.saveAndFlush(favorites);
-        return ResponseEntity.ok("Favorite created successfully!");
+        Long highestId = favoritesRepository.getHighestID();
+        return ResponseEntity.ok("Favorite created successfully with id " + highestId);
     }
 
 

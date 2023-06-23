@@ -43,7 +43,8 @@ public class RentalOrderController {
         rentalOrder.setModifiedBy(username);
         rentalOrder.setModifiedOn(LocalDate.now());
         rentalOrderRepository.saveAndFlush(rentalOrder);
-        return ResponseEntity.ok("Order created!");
+        Long highestId = rentalOrderRepository.getHighestID();
+        return ResponseEntity.ok("Order created with id " + highestId);
     }
     /**
      * This mapping retrieves the rental order with the specified ID

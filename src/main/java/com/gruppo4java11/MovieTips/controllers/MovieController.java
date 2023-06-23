@@ -65,9 +65,14 @@ public class MovieController {
      * @return ResponseEntity indicating the success of the movie creation
      */
     @PostMapping
-    public ResponseEntity<String> addMovie(@RequestBody Movie movie){
+    public ResponseEntity<String> addMovie(@RequestBody Movie movie, @RequestParam String username){
+        movie.setCreatedBy(username);
+        movie.setCreatedOn(LocalDate.now());
+        movie.setModifiedOn(LocalDate.now());
+        movie.setModifiedBy(username);
         movieRepository.saveAndFlush(movie);
-        return ResponseEntity.ok("Movie Added!");
+        Long highestId = movieRepository.getHighestID();
+        return ResponseEntity.ok("Movie added successfully with id " + highestId);
     }
     /**
      * Updates the movie with the specified ID in the database
@@ -76,11 +81,13 @@ public class MovieController {
      * @return  ResponseEntity indicating the success of the movie update
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateMovie(@RequestBody Movie movie, @PathVariable long id){
+    public ResponseEntity<String> updateMovie(@RequestBody Movie movie, @PathVariable long id, @RequestParam String username){
         Movie movieFromDB = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie does not exist!"));
         movieFromDB.setCostPerDay(movie.getCostPerDay());
         movieFromDB.setTmbdId(movie.getTmbdId());
         movieFromDB.setStockQuantity(movie.getStockQuantity());
+        movieFromDB.setModifiedBy(username);
+        movieFromDB.setModifiedOn(LocalDate.now());
         movieRepository.saveAndFlush(movieFromDB);
         return ResponseEntity.ok("Movie updated!");
     }

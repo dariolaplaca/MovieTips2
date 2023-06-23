@@ -25,4 +25,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     @Query(value = "update Movie SET recordStatus = :recordStatus WHERE id = :id")
     void updateStatusById(@Param(value = "recordStatus") RecordStatus recordStatus, @Param(value = "id") Long id);
 
+    @Query(value = "select Max(id) from Movie")
+    Long getHighestID();
 }

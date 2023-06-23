@@ -26,5 +26,7 @@ public interface FavoritesRepository extends JpaRepository<Favorites,Long> {
     @Query(value = "update Favorites SET recordStatus = :recordStatus WHERE id = :id")
     void updateStatusById(@Param(value = "recordStatus") RecordStatus recordStatus, @Param(value = "id") Long id);
 
+    @Query(value = "select Max(id) from Favorites")
+    Long getHighestID();
 }
 //:#{#role}

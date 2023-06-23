@@ -23,4 +23,6 @@ public interface RentalOrderRepository extends JpaRepository<RentalOrder, Long> 
     @Query(value = "update RentalOrder SET recordStatus = :recordStatus WHERE id = :id")
     void updateStatusById(@Param(value = "recordStatus") RecordStatus recordStatus, @Param(value = "id") Long id);
 
+    @Query(value = "select Max(id) from RentalOrder")
+    Long getHighestID();
 }
