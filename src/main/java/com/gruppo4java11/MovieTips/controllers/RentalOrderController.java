@@ -6,9 +6,11 @@ import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.RentalOrderRepository;
 import com.gruppo4java11.MovieTips.services.RentalOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 /**
  * Controllers of the rental order entities
@@ -35,7 +37,11 @@ public class RentalOrderController {
      * @return ResponseEntity indicating the success of the rental order creation
      */
     @PostMapping
-    public ResponseEntity<String> createRentalOrder(@RequestBody RentalOrder rentalOrder) {
+    public ResponseEntity<String> createRentalOrder(@RequestBody RentalOrder rentalOrder, @RequestParam String username) {
+        rentalOrder.setCreatedBy(username);
+        rentalOrder.setCreatedOn(LocalDate.now());
+        rentalOrder.setModifiedBy(username);
+        rentalOrder.setModifiedOn(LocalDate.now());
         rentalOrderRepository.saveAndFlush(rentalOrder);
         return ResponseEntity.ok("Order created!");
     }
@@ -49,7 +55,7 @@ public class RentalOrderController {
         return rentalOrderRepository.findById(id).orElse(null);
     }
     /**
-     * This mapping retieves all the rental order from the database
+     * This mapping retrieves all the rental order from the database
      * @return a list of the allo rental order
      */
     @GetMapping("/all")
@@ -63,13 +69,18 @@ public class RentalOrderController {
      * @return ResponseEntity indicating the success of the rental order update
      */
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateRentalOrders(@RequestBody RentalOrder rentalOrder, @PathVariable long id){
-        RentalOrder rentalsFromDB = rentalOrderRepository.findById(id).orElseThrow(()-> new RuntimeException("Order not found!"));
+    public ResponseEntity<String> updateRentalOrders(@RequestBody RentalOrder rentalOrder, @PathVariable long id, @RequestParam String username){
+        RentalOrder rentalsFromDB = rentalOrderRepository.findById(id).orElse(null);
+        if(rentalsFromDB == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order with id " + id + " not found!");
+        }
         rentalsFromDB.setAccount(rentalOrder.getAccount());
         rentalsFromDB.setOrderStatus(rentalOrder.getOrderStatus());
         rentalsFromDB.setOrderTime(rentalOrder.getOrderTime());
         rentalsFromDB.setReturnTime(rentalOrder.getReturnTime());
         rentalsFromDB.setMovie(rentalOrder.getMovie());
+        rentalsFromDB.setModifiedOn(LocalDate.now());
+        rentalsFromDB.setModifiedBy(username);
         rentalOrderRepository.saveAndFlush(rentalsFromDB);
         return ResponseEntity.ok("Order updated!");
     }
@@ -90,10 +101,12 @@ public class RentalOrderController {
      * @return A ResponseEntity containing a message indicating the updated status of the rental order.
      */
     @PatchMapping("/set-status/{id}")
-    public ResponseEntity<String> setAccountStatus(@PathVariable long id){
+    public ResponseEntity<String> setAccountStatus(@PathVariable long id, @RequestParam String username){
         RentalOrder rentalOrderToChange = rentalOrderRepository.findById(id).orElseThrow(()-> new RuntimeException("Order not found!"));
         if(rentalOrderToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) rentalOrderToChange.setRecordStatus(RecordStatus.DELETED);
         else rentalOrderToChange.setRecordStatus(RecordStatus.ACTIVE);
+        rentalOrderToChange.setModifiedBy(username);
+        rentalOrderToChange.setModifiedOn(LocalDate.now());
         rentalOrderRepository.updateStatusById(rentalOrderToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Order with id " + id + " Status Updated to " + rentalOrderToChange.getRecordStatus());
     }

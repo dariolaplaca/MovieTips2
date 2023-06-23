@@ -58,12 +58,12 @@ public class AccountController {
      * @return Optional containing the account with the specified ID
      */
     @GetMapping("/{id}")
-    public Optional<Account> getAccount(@PathVariable long id) {
-        if(accountRepository.findById(id).get().equals(null)) {
+    public Account getAccount(@PathVariable long id) {
+        if(accountRepository.findById(id).isEmpty()) {
             throw new AccountNotFoundException("Account id not found" + id);
         }
         else{
-        return accountRepository.findById(id);
+        return accountRepository.findById(id).get();
         }
     }
     /**
