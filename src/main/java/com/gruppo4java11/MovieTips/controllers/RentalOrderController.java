@@ -5,18 +5,21 @@ import com.gruppo4java11.MovieTips.entities.RentalOrder;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.RentalOrderRepository;
 import com.gruppo4java11.MovieTips.services.RentalOrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 /**
  * Controllers of the rental order entities
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/api/order")
+@Tag(name = "Orders API")
 public class RentalOrderController {
 
     @Autowired
@@ -36,12 +39,12 @@ public class RentalOrderController {
      * @param rentalOrder  rental order to be created
      * @return ResponseEntity indicating the success of the rental order creation
      */
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> createRentalOrder(@RequestBody RentalOrder rentalOrder, @RequestParam String username) {
         rentalOrder.setCreatedBy(username);
-        rentalOrder.setCreatedOn(LocalDate.now());
+        rentalOrder.setCreatedOn(LocalDateTime.now());
         rentalOrder.setModifiedBy(username);
-        rentalOrder.setModifiedOn(LocalDate.now());
+        rentalOrder.setModifiedOn(LocalDateTime.now());
         rentalOrderRepository.saveAndFlush(rentalOrder);
         Long highestId = rentalOrderRepository.getHighestID();
         return ResponseEntity.ok("Order created with id " + highestId);
@@ -80,7 +83,7 @@ public class RentalOrderController {
         rentalsFromDB.setOrderTime(rentalOrder.getOrderTime());
         rentalsFromDB.setReturnTime(rentalOrder.getReturnTime());
         rentalsFromDB.setMovie(rentalOrder.getMovie());
-        rentalsFromDB.setModifiedOn(LocalDate.now());
+        rentalsFromDB.setModifiedOn(LocalDateTime.now());
         rentalsFromDB.setModifiedBy(username);
         rentalOrderRepository.saveAndFlush(rentalsFromDB);
         return ResponseEntity.ok("Order updated!");
@@ -107,7 +110,7 @@ public class RentalOrderController {
         if(rentalOrderToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) rentalOrderToChange.setRecordStatus(RecordStatus.DELETED);
         else rentalOrderToChange.setRecordStatus(RecordStatus.ACTIVE);
         rentalOrderToChange.setModifiedBy(username);
-        rentalOrderToChange.setModifiedOn(LocalDate.now());
+        rentalOrderToChange.setModifiedOn(LocalDateTime.now());
         rentalOrderRepository.updateStatusById(rentalOrderToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Order with id " + id + " Status Updated to " + rentalOrderToChange.getRecordStatus());
     }

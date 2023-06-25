@@ -1,6 +1,5 @@
 package com.gruppo4java11.MovieTips.entities;
 
-import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
@@ -10,7 +9,7 @@ import org.hibernate.annotations.Where;
 @Where(clause = "record_status = 'ACTIVE'")
 @Entity
 @Table(name = "favorites")
-public class Favorites extends AuditableEntity {
+public class Favorite extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +24,7 @@ public class Favorites extends AuditableEntity {
      * @param account id reference of account
      * @param TMDB_ID id reference of external api
      */
-    public Favorites(Long id, Account account, Integer TMDB_ID) {
+    public Favorite(Long id, Account account, Integer TMDB_ID) {
         this.id = id;
         this.account = account;
         this.TMDB_ID = TMDB_ID;
@@ -34,12 +33,12 @@ public class Favorites extends AuditableEntity {
     /**
      * Same constructor for Favorites class without id
      */
-    public Favorites(Account account, Integer TMDB_ID) {
+    public Favorite(Account account, Integer TMDB_ID) {
         this.account = account;
         this.TMDB_ID = TMDB_ID;
     }
 
-    public Favorites() {
+    public Favorite() {
     }
 
     public Long getId() {

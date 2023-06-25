@@ -1,6 +1,5 @@
 package com.gruppo4java11.MovieTips.entities;
 
-import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 

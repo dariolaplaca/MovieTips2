@@ -6,11 +6,19 @@ import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.exception.AccountNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.services.AccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +26,8 @@ import java.util.Optional;
  * Controller of the account entities
  */
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/account")
+@Tag(name = "Accounts API")
 public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
@@ -35,12 +44,18 @@ public class AccountController {
      * @param account account to add in the database
      * @return Response Entity of String depending on the http status
      */
+    @Operation(summary = "Create a new Account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account Successfully created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) })
+    })
     @PostMapping("/create")
-    public ResponseEntity<String> createAccount(@RequestBody Account account, @RequestParam String username) {
-        account.setCreatedOn(LocalDate.now());
+    public ResponseEntity<String> createAccount(@Parameter(description = "Body of the account to create") @RequestBody Account account, @Parameter(description = "Name of the user whom is creating the account") @RequestParam String username) {
+        account.setCreatedOn(LocalDateTime.now());
         account.setCreatedBy(username);
         account.setModifiedBy(username);
-        account.setModifiedOn(LocalDate.now());
+        account.setModifiedOn(LocalDateTime.now());
         accountRepository.saveAndFlush(account);
         Long highestId = accountRepository.getHighestID();
         return ResponseEntity.ok("Account Created with id " + highestId);
@@ -49,7 +64,7 @@ public class AccountController {
      * This mapping retrieves all the accounts from the database
      * @return List of accounts retrieved from the database
      */
-    @GetMapping
+    @GetMapping("/all")
     public List<Account> getAllAccount() {
         return accountRepository.findAll();
     }
@@ -82,7 +97,7 @@ public class AccountController {
         accountFromDB.setPassword(account.getPassword());
         accountFromDB.setUserRole(account.getUserRole());
         accountFromDB.setModifiedBy(username);
-        accountFromDB.setModifiedOn(LocalDate.now());
+        accountFromDB.setModifiedOn(LocalDateTime.now());
         accountRepository.saveAndFlush(accountFromDB);
         return ResponseEntity.ok("Account Updated!");
     }
@@ -122,7 +137,7 @@ public class AccountController {
     @PatchMapping("/set-status/{id}")
     public ResponseEntity<String> setAccountStatus(@PathVariable long id, @RequestParam String username){
         Account accountToChange = accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not found!"));
-        accountToChange.setModifiedOn(LocalDate.now());
+        accountToChange.setModifiedOn(LocalDateTime.now());
         accountToChange.setModifiedBy(username);
         if(accountToChange.getRecordStatus().equals(RecordStatus.ACTIVE)) accountToChange.setRecordStatus(RecordStatus.DELETED);
         else accountToChange.setRecordStatus(RecordStatus.ACTIVE);

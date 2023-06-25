@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * This class is the parent class of all the entities in the database
@@ -23,9 +24,9 @@ public class AuditableEntity {
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "modified_on")
-    private LocalDate modifiedOn;
+    private LocalDateTime modifiedOn;
     @Column(name = "created_on")
-    private LocalDate createdOn;
+    private LocalDateTime createdOn;
 
     /**
      * Constructor for the Record Superclass
@@ -59,19 +60,19 @@ public class AuditableEntity {
         this.createdBy = createdBy;
     }
 
-    public LocalDate getModifiedOn() {
+    public LocalDateTime getModifiedOn() {
         return this.modifiedOn;
     }
 
-    public void setModifiedOn(LocalDate modifiedOn) {
+    public void setModifiedOn(LocalDateTime modifiedOn) {
         this.modifiedOn = modifiedOn;
     }
 
-    public LocalDate getCreatedOn() {
+    public LocalDateTime getCreatedOn() {
         return this.createdOn;
     }
 
-    public void setCreatedOn(LocalDate createdOn) {
+    public void setCreatedOn(LocalDateTime createdOn) {
         this.createdOn = createdOn;
     }
 }

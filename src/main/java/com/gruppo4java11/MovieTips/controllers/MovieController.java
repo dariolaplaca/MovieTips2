@@ -1,12 +1,12 @@
 package com.gruppo4java11.MovieTips.controllers;
 
-import com.gruppo4java11.MovieTips.entities.Favorites;
 import com.gruppo4java11.MovieTips.entities.Movie;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.exception.MovieErrorResponse;
 import com.gruppo4java11.MovieTips.exception.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import com.gruppo4java11.MovieTips.services.MovieService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,13 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 /**
  * Controller of the movie entities
  */
 @RestController
-@RequestMapping("/movie")
+@RequestMapping("/api/movie")
+@Tag(name = "Movies API")
 public class MovieController {
     String api_key;
     @Autowired
@@ -64,11 +65,11 @@ public class MovieController {
      * @param movie movie to be created
      * @return ResponseEntity indicating the success of the movie creation
      */
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<String> addMovie(@RequestBody Movie movie, @RequestParam String username){
         movie.setCreatedBy(username);
-        movie.setCreatedOn(LocalDate.now());
-        movie.setModifiedOn(LocalDate.now());
+        movie.setCreatedOn(LocalDateTime.now());
+        movie.setModifiedOn(LocalDateTime.now());
         movie.setModifiedBy(username);
         movieRepository.saveAndFlush(movie);
         Long highestId = movieRepository.getHighestID();
@@ -87,7 +88,7 @@ public class MovieController {
         movieFromDB.setTmbdId(movie.getTmbdId());
         movieFromDB.setStockQuantity(movie.getStockQuantity());
         movieFromDB.setModifiedBy(username);
-        movieFromDB.setModifiedOn(LocalDate.now());
+        movieFromDB.setModifiedOn(LocalDateTime.now());
         movieRepository.saveAndFlush(movieFromDB);
         return ResponseEntity.ok("Movie updated!");
     }
@@ -166,7 +167,7 @@ public class MovieController {
         else movieToChange.setRecordStatus(RecordStatus.ACTIVE);
 
         movieToChange.setModifiedBy(username);
-        movieToChange.setModifiedOn(LocalDate.now());
+        movieToChange.setModifiedOn(LocalDateTime.now());
         movieRepository.updateStatusById(movieToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Movie with id " + id + " Status Updated to " + movieToChange.getRecordStatus());
     }
