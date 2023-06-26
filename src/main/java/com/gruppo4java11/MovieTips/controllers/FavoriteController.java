@@ -56,7 +56,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully retrieved",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
     })
@@ -72,7 +72,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorites Successfully retrieved",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), })
+                            schema = @Schema(implementation = Favorite.class)), })
     })
     @GetMapping("/all")
     public List<Favorite> getAllFavorites() {
@@ -89,7 +89,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully created",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
     })
     @PostMapping("/{account_id}/id/{tmdb_id}")
@@ -122,7 +122,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully created",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "400", description = "Favorite name is Invalid", content = @Content)
     })
     @PostMapping("/{account_id}/title/{movieName}")
@@ -155,7 +155,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully edited",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
     })
@@ -178,7 +178,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully removed",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
     })
@@ -197,7 +197,7 @@ public class FavoriteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Status Successfully set",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Account.class)), }),
+                            schema = @Schema(implementation = Favorite.class)), }),
             @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
             @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
     })
