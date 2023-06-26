@@ -7,8 +7,15 @@ import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.repositories.FavoriteRepository;
 import com.gruppo4java11.MovieTips.services.FavoriteService;
 import com.gruppo4java11.MovieTips.services.MovieService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,27 +52,48 @@ public class FavoriteController {
      * @param id ID of the favorites to retrieve
      * @return the favorites with the specified ID
      */
+    @Operation(summary = "Get a favorite by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
+    })
     @GetMapping("/{id}")
-    public Favorite getFavorites(@PathVariable long id){
+    public Favorite getFavorites(@Parameter(description = "ID of the Favorite to Retrieve") @PathVariable long id){
         return favoriteRepository.findById(id).orElse(null);
     }
     /**
      * This mapping retrieves all the favorites from the database
      * @return  a list of all the favorites in the database
      */
+    @Operation(summary = "Get all favorites")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorites Successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), })
+    })
     @GetMapping("/all")
     public List<Favorite> getAllFavorites() {
         return favoriteRepository.findAll();
     }
 
     /**
-     * Creates a new favorite for the specified account
+     * Creates a new favorite for the specified account by ID
      * @param tmdb_id The TMDB ID of the item to add as a favorite
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
+    @Operation(summary = "Create a new Favorite for the Specified Account by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Successfully created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
+    })
     @PostMapping("/{account_id}/id/{tmdb_id}")
-    public ResponseEntity<String> createFavorites(@PathVariable int tmdb_id, @PathVariable long account_id, @RequestParam String username) {
+    public ResponseEntity<String> createFavorites(@Parameter(description = "ID of the tmdb movie") @PathVariable int tmdb_id, @Parameter(description = "ID of the account") @PathVariable long account_id, @Parameter(description = "Name of user that is creating the favorite") @RequestParam String username) {
         Account account = accountRepository.findById(account_id).orElse(null);
         if(account == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The account with id " + account_id + " was not found!");
@@ -84,13 +112,21 @@ public class FavoriteController {
 
 
     /**
-     * Creates a new favorite for the specified account
+     * Creates a new favorite for the specified account by name
      * @param movieName The movie name of the record to add as a favorite
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
+
+    @Operation(summary = "Create a new Favorite for the Specified Account by Name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Successfully created",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "400", description = "Favorite name is Invalid", content = @Content)
+    })
     @PostMapping("/{account_id}/title/{movieName}")
-    public ResponseEntity<String> createFavorites(@PathVariable String movieName, @PathVariable long account_id, @RequestParam String username) {
+    public ResponseEntity<String> createFavorites(@Parameter(description = "Name of the TMDB Movie") @PathVariable String movieName, @Parameter(description = "ID of the account") @PathVariable long account_id, @Parameter(description = "Name of the user that is creating the favorite") @RequestParam String username) {
         Account account = accountRepository.findById(account_id).orElse(new Account());
         Integer TMDB_id = movieService.getTMDBIdByName(movieName);
         if(account.getName() == null){
@@ -115,8 +151,16 @@ public class FavoriteController {
      * @param id ID of the favorite to update
      * @return  ResponseEntity indicating the success of the favorite update
      */
+    @Operation(summary = "Edit a Favorite by ID from the list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Successfully edited",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateFavorites(@RequestBody Favorite favorite, @PathVariable long id, @RequestParam String username){
+    public ResponseEntity<String> updateFavorites(@Parameter(description = "Body of the favorite to edit") @RequestBody Favorite favorite, @Parameter(description = "ID of the favorite to edit") @PathVariable long id, @Parameter(description = "Name of the account editing the favorite") @RequestParam String username){
         Favorite favoriteFromDB = favoriteRepository.findById(id).orElseThrow(()-> new RuntimeException("Favorite not found!"));
         favoriteFromDB.setAccount(favorite.getAccount());
         favoriteFromDB.setTMDB_ID(favorite.getTMDB_ID());
@@ -130,8 +174,16 @@ public class FavoriteController {
      * @param id ID of the favorite to delete
      * @return ResponseEntity indicating the success of the favorite deletion
      */
+    @Operation(summary = "Delete a Favorite by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Successfully removed",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteFavorite(@PathVariable long id){
+    public ResponseEntity<String> deleteFavorite(@Parameter(description = "ID of the favorite to be deleted") @PathVariable long id){
         favoriteRepository.deleteById(id);
         return ResponseEntity.ok("Favorite removed!");
     }
@@ -141,8 +193,16 @@ public class FavoriteController {
      * @param id ID of the favorite to update
      * @return ResponseEntity containing a message indicating the updated status of the favorite
      */
+    @Operation(summary = "Sets the status a Favorite by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Favorite Status Successfully set",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)), }),
+            @ApiResponse(responseCode = "404", description = "Favorite Not Found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Favorite ID is Invalid", content = @Content)
+    })
     @PatchMapping("/set-status/{id}")
-    public ResponseEntity<String> setFavoriteStatus(@PathVariable long id, @RequestParam String name){
+    public ResponseEntity<String> setFavoriteStatus(@Parameter(description = "ID of the favorite") @PathVariable long id, @Parameter(description = "Name of the user setting the status") @RequestParam String name){
         Favorite favoriteToChange = favoriteRepository.findById(id).orElseThrow(()-> new RuntimeException("Favorite not found!"));
         favoriteToChange.setModifiedOn(LocalDateTime.now());
         favoriteToChange.setModifiedBy(name);
