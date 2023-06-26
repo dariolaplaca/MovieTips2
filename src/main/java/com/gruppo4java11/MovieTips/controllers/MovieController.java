@@ -1,11 +1,18 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.Movie;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.exception.MovieErrorResponse;
 import com.gruppo4java11.MovieTips.exception.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import com.gruppo4java11.MovieTips.services.MovieService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +50,16 @@ public class MovieController {
      * @param id ID of the movie to retrieve
      * @return the movie with the specified ID, or null if not found
      */
+    @Operation(summary = "Get a movie by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @GetMapping("/{id}")
-    public Movie getMovie(@PathVariable long id){
+    public Movie getMovie(@Parameter(description = "Id of the movie") @PathVariable long id){
         if(movieRepository.findById(id).isEmpty()){
             return null;
         }
@@ -55,6 +70,12 @@ public class MovieController {
      * This mapping retrieves all the movies from the database
      * @return a list of the all movies in the database
      */
+    @Operation(summary = "Get all Movies")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All Movies successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) })
+    })
     @GetMapping("/all")
     public List<Movie> getAllMovies(){
         return movieRepository.findAll();
@@ -65,8 +86,18 @@ public class MovieController {
      * @param movie movie to be created
      * @return ResponseEntity indicating the success of the movie creation
      */
+    @Operation(summary = "Add a new Movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie successfully added",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "400", description = "Poorly formatted Request Body",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) })
+
+    })
     @PostMapping("/create")
-    public ResponseEntity<String> addMovie(@RequestBody Movie movie, @RequestParam String username){
+    public ResponseEntity<String> addMovie(@Parameter(description = "Movie body with all the parameters")@RequestBody Movie movie, @Parameter(description = "Name of the user that is creating a new Movie")@RequestParam String username){
         movie.setCreatedBy(username);
         movie.setCreatedOn(LocalDateTime.now());
         movie.setModifiedOn(LocalDateTime.now());
@@ -81,8 +112,18 @@ public class MovieController {
      * @param id ID of the movie to update
      * @return  ResponseEntity indicating the success of the movie update
      */
+    @Operation(summary = "Update a movie by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie successfully updated",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Poorly formatted Request Body",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) })
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateMovie(@RequestBody Movie movie, @PathVariable long id, @RequestParam String username){
+    public ResponseEntity<String> updateMovie(@Parameter(description = "Movie body with all the parameters")@RequestBody Movie movie, @Parameter(description = "Id of the movie to update")@PathVariable long id, @Parameter(description = "Name of the user that is updating the movie")@RequestParam String username){
         Movie movieFromDB = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie does not exist!"));
         movieFromDB.setCostPerDay(movie.getCostPerDay());
         movieFromDB.setTmbdId(movie.getTmbdId());
@@ -97,8 +138,17 @@ public class MovieController {
      * @param id ID of the movie to delete
      * @return  ResponseEntity indicating the success of the movie deletion
      */
+    @Operation(summary = "Delete a movie by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie successfully deleted",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID",
+                    content = @Content )
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMovie(@PathVariable long id){
+    public ResponseEntity<String> deleteMovie(@Parameter(description = "Id of the movie to delete")@PathVariable long id){
         movieRepository.deleteById(id);
         return ResponseEntity.ok("Movie Deleted!");
     }
@@ -107,8 +157,16 @@ public class MovieController {
      * @param name the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
+    @Operation(summary = "Get movies info from the external database through TMDb API by name")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "TMDb Movie successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid Name", content = @Content)
+    })
     @GetMapping("/tmdb/title/{name}")
-    public ResponseEntity<String> getMovieFromTMDBByName(@PathVariable String name){
+    public ResponseEntity<String> getMovieFromTMDBByName(@Parameter(description = "Name of the movie to retrieve")@PathVariable String name){
         Response response = movieService.getMovieFromTMDBByName(name);
         String body = "Something went wrong";
         try{
@@ -129,8 +187,16 @@ public class MovieController {
      * @param id the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
+    @Operation(summary = "Get movies info from the external database through TMDb API by its id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "TMDb Movie successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID", content = @Content)
+    })
     @GetMapping("/tmdb/id/{id}")
-    public ResponseEntity<String> getMovieFromTMDBById(@PathVariable Integer id) throws IOException {
+    public ResponseEntity<String> getMovieFromTMDBById(@Parameter(description = "Id of the External Database Movie")@PathVariable Integer id) throws IOException {
         Response response = movieService.getMovieFromTMDBById(id);
         if (response == null || response.body() == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found!");
@@ -144,6 +210,13 @@ public class MovieController {
      * @return  ResponseEntity containing the list of movies currently playing in theaters
      * @throws IOException
      */
+    @Operation(summary = "Get all the info of the movies that are currently in theaters")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie in theaters list successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie List not found", content = @Content)
+    })
     @GetMapping("/now-playing")
     public ResponseEntity<String> nowPlayingInTheaters() throws IOException {
         Response response = movieService.nowPlayingInTheaters();
@@ -156,6 +229,14 @@ public class MovieController {
      * @param id ID of the movie to update
      * @return ResponseEntity containing a message indicating the updated status of the movie
      */
+    @Operation(summary = "Set the logical status of an Movie's record by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Movie status successfully changed",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @PatchMapping("/set-status/{id}")
     public ResponseEntity<String> setMovieStatus(@PathVariable long id, @RequestParam String username){
         Movie movieToChange = movieRepository.findById(id).orElse(null);

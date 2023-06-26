@@ -14,7 +14,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,14 +48,14 @@ public class AccountController {
      * @param account account to add in the database
      * @return Response Entity of String depending on the http status
      */
-    @Operation(summary = "Create a new Account")
+    @Operation(summary = "Create a new account")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Account Successfully created",
+            @ApiResponse(responseCode = "200", description = "Account successfully created",
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Account.class)) })
     })
     @PostMapping("/create")
-    public ResponseEntity<String> createAccount(@Parameter(description = "Body of the account to create") @RequestBody Account account, @Parameter(description = "Name of the user whom is creating the account") @RequestParam String username) {
+    public ResponseEntity<String> createAccount(@Parameter(description = "Body of the account to create") @RequestBody Account account, @Parameter(description = "Name of the user that is creating the account") @RequestParam String username) {
         account.setCreatedOn(LocalDateTime.now());
         account.setCreatedBy(username);
         account.setModifiedBy(username);
@@ -64,6 +68,12 @@ public class AccountController {
      * This mapping retrieves all the accounts from the database
      * @return List of accounts retrieved from the database
      */
+    @Operation(summary = "Get all Accounts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All accounts successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+    })
     @GetMapping("/all")
     public List<Account> getAllAccount() {
         return accountRepository.findAll();
@@ -73,10 +83,18 @@ public class AccountController {
      * @param id  ID of the account to retrieve
      * @return Optional containing the account with the specified ID
      */
+    @Operation(summary = "Get an account by ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account successfully retrieved",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @GetMapping("/{id}")
-    public Account getAccount(@PathVariable long id) {
+    public Account getAccount(@Parameter(description = "Id of the account to retrieve")@PathVariable long id) {
         if(accountRepository.findById(id).isEmpty()) {
-            throw new AccountNotFoundException("Account id not found" + id);
+            throw new AccountNotFoundException("Account id not found " + id);
         }
         return accountRepository.findById(id).get();
 
@@ -87,8 +105,16 @@ public class AccountController {
      * @param account the updated account details
      * @return ResponseEntity indicating the success of the account update
      */
+    @Operation(summary = "Update an Account by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account successfully updated",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateAccount(@PathVariable long id, @RequestBody Account account, @RequestParam String username) {
+    public ResponseEntity<String> updateAccount(@Parameter(description = "Id of the account to update")@PathVariable long id, @Parameter(description = "Body containing the account parameters to update")@RequestBody Account account, @Parameter(description = "Name of the user that is updating the account")@RequestParam String username) {
         Account accountFromDB = accountRepository.findById(id).orElseThrow(()->new RuntimeException("Account not found"));
         accountFromDB.setName(account.getName());
         accountFromDB.setSurname(account.getSurname());
@@ -106,23 +132,30 @@ public class AccountController {
      * @param id Deletes the account with the specified ID from the database
      * @return ResponseEntity indicating the success of the account deletion
      */
+    @Operation(summary = "Delete an Account by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account successfully deleted",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteAccountById(@PathVariable long id) {
+    public ResponseEntity<String> deleteAccountById(@Parameter(description = "Id of the account to delete")@PathVariable long id) {
         accountRepository.deleteById(id);
         return ResponseEntity.ok("Deleted Account number: " + id);
     }
-    /**
-     * Deletes multiple accounts with the specified IDs from the database
-     * @param ids IDs of the accounts to delete
-     */
-    @DeleteMapping("")
-    public void deleteMultipleAccountsById(@PathVariable Iterable<? extends Long> ids) {
-        accountRepository.deleteAllById(ids);
-    }
+
     /**
      * Deletes all the accounts from the database
-     * @return
+     * @return ResponseEntity containing a message indicating the status of the request
      */
+    @Operation(summary = "Delete all Accounts")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "All Account successfully deleted",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+    })
     @DeleteMapping("/all")
     public ResponseEntity<String> deleteAllAccounts() {
         accountRepository.deleteAll();
@@ -134,8 +167,16 @@ public class AccountController {
      * @param id ID of the account to update
      * @return  ResponseEntity containing a message indicating the updated status of the account
      */
+    @Operation(summary = "Set the logical status of an Account's record by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Account status successfully changed",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Account.class)) }),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
     @PatchMapping("/set-status/{id}")
-    public ResponseEntity<String> setAccountStatus(@PathVariable long id, @RequestParam String username){
+    public ResponseEntity<String> setAccountStatus(@Parameter(description = "Id of the account")@PathVariable long id, @Parameter(description = "Name of the user that is changing the status")@RequestParam String username){
         Account accountToChange = accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not found!"));
         accountToChange.setModifiedOn(LocalDateTime.now());
         accountToChange.setModifiedBy(username);
