@@ -1,9 +1,9 @@
 package com.gruppo4java11.MovieTips.controllers;
 
-import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.RentalOrder;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.RentalOrderRepository;
+import com.gruppo4java11.MovieTips.services.AccountService;
 import com.gruppo4java11.MovieTips.services.RentalOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,11 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 /**
@@ -30,20 +30,28 @@ public class RentalOrderController {
 
     @Autowired
     private RentalOrderRepository rentalOrderRepository;
+    @Autowired
+    private AccountService accountService;
+    @Autowired
     private RentalOrderService rentalOrderService;
 
     /**
      * @param rentalOrderRepository the repository used for accessing and managing rental orders
      * @param rentalOrderService  the service used for performing operations on rental orders
      */
-    public RentalOrderController(RentalOrderRepository rentalOrderRepository, RentalOrderService rentalOrderService) {
+    public RentalOrderController(RentalOrderRepository rentalOrderRepository, RentalOrderService rentalOrderService, AccountService accountService) {
         this.rentalOrderRepository = rentalOrderRepository;
         this.rentalOrderService = rentalOrderService;
+        this.accountService = accountService;
     }
+
     /**
      * Creates a new rental order in the database.
-     * @param rentalOrder  rental order to be created
-     * @return ResponseEntity indicating the success of the rental order creation
+     * @param movieID ID of the selected movie
+     * @param rentalDays amount of days the user wishes to rent the movie
+     * @param accountId ID of the user's account
+     * @param username Username of the user's account
+     * @return Response entity indicating the success of the created order
      */
     @Operation(summary = "Create a new Order")
     @ApiResponses(value = {
@@ -52,7 +60,8 @@ public class RentalOrderController {
                             schema = @Schema(implementation = RentalOrder.class)) })
     })
     @PostMapping("/create")
-    public ResponseEntity<String> createRentalOrder(@Parameter(description = "Body of the order to add") @RequestBody RentalOrder rentalOrder, @Parameter(description = "Name of the user that is adding the order")@RequestParam String username) {
+    public ResponseEntity<String> createRentalOrder(@Parameter(description = "Body of the order to add") @RequestParam Long movieID, @Parameter(description = "Name of the user that is adding the order")@RequestParam Integer rentalDays, @Parameter(description = "ID of the user's account")@RequestParam Long accountId, @Parameter(description = "Name of the user that is performing the creation") @RequestParam String username) {
+        RentalOrder rentalOrder = accountService.confirmRentalOrder(movieID, rentalDays, accountId);
         rentalOrder.setCreatedBy(username);
         rentalOrder.setCreatedOn(LocalDateTime.now());
         rentalOrder.setModifiedBy(username);
@@ -61,6 +70,42 @@ public class RentalOrderController {
         Long highestId = rentalOrderRepository.getHighestID();
         return ResponseEntity.ok("Order created with id " + highestId);
     }
+
+    /**
+     * Allows the user to proceed to the checkout screen where the total cost of the rental is calculated whether it was returned on time or if it was returned late, thust applying a penalty fee.
+     * @param rentalOrderId The ID of the specific rental order that was made by the user
+     * @return a Response entity that confirms whether the payment was successful or not.
+     */
+    @Operation(summary = "Proceed to checkout")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Payment went through successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RentalOrder.class)) })
+    })
+    @GetMapping("/checkout")
+    public ResponseEntity<String> paymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
+        Double cost = accountService.paymentCheckout(rentalOrderRepository.findById(rentalOrderId).get());
+        Double penaltyFee = accountService.getPenaltyFee(rentalOrderRepository.findById(rentalOrderId).get());
+        return ResponseEntity.ok("Total cost of movie is:  " + cost + " of which " + penaltyFee + " have been added as a penalty fee.");
+    }
+    /**
+     * Allows the user to proceed to the checkout screen where the total cost of the rental is calculated whether it was returned on time or if it was returned late, thust applying a penalty fee.
+     * @param rentalOrderId The ID of the specific rental order that was made by the user
+     * @return a Response entity that confirms whether the payment was successful or not.
+     */
+    @Operation(summary = "TEST to see Penalty in action")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Payment went through successfully",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RentalOrder.class)) })
+    })
+    @GetMapping("/future-checkout")
+    public ResponseEntity<String> futurePaymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
+        Double cost = accountService.futurePaymentCheckout(rentalOrderRepository.findById(rentalOrderId).get());
+        Double penaltyFee = accountService.getFuturePenaltyFee(rentalOrderRepository.findById(rentalOrderId).get());
+        return ResponseEntity.ok("Total cost of movie is:  " + cost  + " of which " + penaltyFee + " have been added as a penalty fee.");
+    }
+
     /**
      * This mapping retrieves the rental order with the specified ID
      * @param id ID of the movie to retrieve
@@ -79,8 +124,8 @@ public class RentalOrderController {
         return rentalOrderRepository.findById(id).orElse(null);
     }
     /**
-     * This mapping retrieves all the rental order from the database
-     * @return a list of the allo rental order
+     * This mapping retrieves all the rental orders from the database
+     * @return a list of all the rental orders
      */
     @Operation(summary = "Get all Orders")
     @ApiResponses(value = {

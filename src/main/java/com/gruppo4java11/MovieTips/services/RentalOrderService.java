@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Class that include all the Services and function of the Order entity
+ * Class that includes all the Services and functions of the Order entity
  */
 @Service
 public class RentalOrderService {

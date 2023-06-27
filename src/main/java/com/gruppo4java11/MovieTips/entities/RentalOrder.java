@@ -1,10 +1,9 @@
 package com.gruppo4java11.MovieTips.entities;
 
-import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * RentalOrder class representing all the orders that have been made in our application to
@@ -22,9 +21,9 @@ public class RentalOrder extends AuditableEntity {
     @ManyToOne
     private Account account;
     @Column(nullable = false, name = "order_time")
-    private LocalDate orderTime;
+    private LocalDateTime orderTime;
     @Column(nullable = false, name = "return_time")
-    private LocalDate returnTime;
+    private LocalDateTime returnTime;
     @Column(nullable = false, name = "order_status")
     private String orderStatus;
 
@@ -37,7 +36,7 @@ public class RentalOrder extends AuditableEntity {
      * @param returnTime the time in which the movie was returned
      * @param orderStatus whether the movie is still in possession of the user or if it has been returned
      */
-    public RentalOrder(long id, Movie movie, Account account, LocalDate orderTime, LocalDate returnTime, String orderStatus) {
+    public RentalOrder(long id, Movie movie, Account account, LocalDateTime orderTime, LocalDateTime returnTime, String orderStatus) {
         this.id = id;
         this.movie = movie;
         this.account = account;
@@ -73,19 +72,19 @@ public class RentalOrder extends AuditableEntity {
         this.account = account;
     }
 
-    public LocalDate getOrderTime() {
+    public LocalDateTime getOrderTime() {
         return orderTime;
     }
 
-    public void setOrderTime(LocalDate orderTime) {
+    public void setOrderTime(LocalDateTime orderTime) {
         this.orderTime = orderTime;
     }
 
-    public LocalDate getReturnTime() {
+    public LocalDateTime getReturnTime() {
         return returnTime;
     }
 
-    public void setReturnTime(LocalDate returnTime) {
+    public void setReturnTime(LocalDateTime returnTime) {
         this.returnTime = returnTime;
     }
 
