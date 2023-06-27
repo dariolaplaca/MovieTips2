@@ -1,14 +1,20 @@
 package com.gruppo4java11.MovieTips.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.gruppo4java11.MovieTips.deserializers.MovieTMDbDeserializer;
 import com.gruppo4java11.MovieTips.dto.MovieDTO;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
+import com.gruppo4java11.MovieTips.tmdbEntities.MovieTMDB;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.DataInput;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.*;
@@ -115,6 +121,25 @@ public class MovieService {
         return getResponseFromTMDB(id);
     }
 
+    public Response getRecommendedMovies(Integer TMDbID) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        String api_key = System.getenv("TMDB_API_KEY");
+        Response response = null;
+        Request request = new Request.Builder()
+                .url("https://api.themoviedb.org/3/movie/"+ TMDbID +"/recommendations?language=en-US&page=1")
+                .get()
+                .addHeader("accept", "application/json")
+                .addHeader("Authorization", "Bearer " + api_key)
+                .build();
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException ioException){
+            ioException.printStackTrace();
+            System.err.println("IOException");
+        }
+        return response;
+    }
+
     @Nullable
     private static Response getResponseFromTMDB(Integer tmbdId) {
         OkHttpClient client = new OkHttpClient();
@@ -135,6 +160,23 @@ public class MovieService {
             System.err.println("IOException");
         }
         return response;
+    }
+
+    public Set<MovieTMDB> deserializeRecommendedMovies(Integer TMDbID) throws IOException {
+        Response response = getRecommendedMovies(TMDbID);
+        Set<MovieTMDB> finalList = new HashSet<>();
+        if (response.body() != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(response.body().string());
+            JsonNode resultsNode = jsonNode.get("results");
+            if (resultsNode != null && resultsNode.isArray()) {
+                for (JsonNode resultNode : resultsNode) {
+                    MovieTMDB recommendedMovie = objectMapper.readValue(resultNode.toString(), MovieTMDB.class);
+                    finalList.add(recommendedMovie);
+                }
+            }
+        }
+        return finalList;
     }
 
 

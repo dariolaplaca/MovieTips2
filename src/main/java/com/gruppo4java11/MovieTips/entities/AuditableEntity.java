@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 /**
  * This class is the parent class of all the entities in the database
  */
-
-//TODO Aggiungere Auditables (ModifiedBy, CreatedBy, ModifiedOn, CreatedOn) Strings e LocalDates
 @MappedSuperclass
 public class AuditableEntity {
     @Column(name = "record_status")

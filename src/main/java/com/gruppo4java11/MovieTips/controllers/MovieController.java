@@ -1,5 +1,6 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.Movie;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
@@ -7,6 +8,7 @@ import com.gruppo4java11.MovieTips.exception.MovieErrorResponse;
 import com.gruppo4java11.MovieTips.exception.MovieNotFoundException;
 import com.gruppo4java11.MovieTips.repositories.MovieRepository;
 import com.gruppo4java11.MovieTips.services.MovieService;
+import com.gruppo4java11.MovieTips.tmdbEntities.MovieTMDB;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,7 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 /**
  * Controller of the movie entities
  */
@@ -196,12 +201,15 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid ID", content = @Content)
     })
     @GetMapping("/tmdb/id/{id}")
-    public ResponseEntity<String> getMovieFromTMDBById(@Parameter(description = "Id of the External Database Movie")@PathVariable Integer id) throws IOException {
+    public ResponseEntity<MovieTMDB> getMovieFromTMDBById(@Parameter(description = "Id of the External Database Movie")@PathVariable Integer id) throws IOException {
         Response response = movieService.getMovieFromTMDBById(id);
         if (response == null || response.body() == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id not found!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(response.body().string());
+        ObjectMapper objectMapper = new ObjectMapper();
+        MovieTMDB movie = objectMapper.readValue(response.body().string(), MovieTMDB.class);
+
+        return ResponseEntity.ok(movie);
     }
 
 
@@ -238,7 +246,7 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
     })
     @PatchMapping("/set-status/{id}")
-    public ResponseEntity<String> setMovieStatus(@PathVariable long id, @RequestParam String username){
+    public ResponseEntity<String> setMovieStatus(@Parameter(description = "Id of the movie")@PathVariable long id, @Parameter(description = "Name of the user that is changing the status")@RequestParam String username){
         Movie movieToChange = movieRepository.findById(id).orElse(null);
         if(movieToChange == null){
             ResponseEntity.status(HttpStatus.NOT_FOUND).body("Movie with id " + id + " not found!");
@@ -251,6 +259,23 @@ public class MovieController {
         movieToChange.setModifiedOn(LocalDateTime.now());
         movieRepository.updateStatusById(movieToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Movie with id " + id + " Status Updated to " + movieToChange.getRecordStatus());
+    }
+
+    @Operation(summary = "Get recommended movies based on another movie")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recommended movies successfully returned",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
+    @GetMapping("recommended/{id}")
+    public ResponseEntity<Set<MovieTMDB>> getRecommendedMovies(@Parameter(description = "Id of the tmdb movie")@PathVariable Integer id) throws IOException {
+        if(!movieService.checkIfTmdbIdIsInJson(id)){
+            return ResponseEntity.badRequest().build();
+        }
+        Set<MovieTMDB> recommendedMovies = movieService.deserializeRecommendedMovies(id);
+        return ResponseEntity.ok(recommendedMovies);
     }
 
     /**

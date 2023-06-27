@@ -1,18 +1,21 @@
 package com.gruppo4java11.MovieTips.tmdbEntities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.gruppo4java11.MovieTips.deserializers.MovieTMDbDeserializer;
+
 import java.time.LocalDate;
 import java.util.List;
 
 /**
  * Class to save the info from TMDB in a custom movie Object
  */
+@JsonDeserialize(using = MovieTMDbDeserializer.class)
 public class MovieTMDB {
     private String title;
     private Integer id;
     private List<Genre> genres;
     private String description;
     private LocalDate releaseDate;
-    private String tagLine;
     private String posterPath;
 
     /**
@@ -22,17 +25,15 @@ public class MovieTMDB {
      * @param genres genre of the movie
      * @param description description of the movie
      * @param releaseDate release date of the movie
-     * @param tagLine line in the poster of the movie
      * @param posterPath path of the poster image
      * Link to get the poster image: https://image.tmdb.org/t/p/original/{posterPathUrl}
      */
-    public MovieTMDB(String title, int id, List<Genre> genres, String description, LocalDate releaseDate, String tagLine, String posterPath) {
+    public MovieTMDB(String title, int id, List<Genre> genres, String description, LocalDate releaseDate, String posterPath) {
         this.title = title;
         this.id = id;
         this.genres = genres;
         this.description = description;
         this.releaseDate = releaseDate;
-        this.tagLine = tagLine;
         this.posterPath = posterPath;
     }
 
@@ -77,14 +78,6 @@ public class MovieTMDB {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
-    }
-
-    public String getTagLine() {
-        return this.tagLine;
-    }
-
-    public void setTagLine(String tagLine) {
-        this.tagLine = tagLine;
     }
 
     public String getPosterPath() {
