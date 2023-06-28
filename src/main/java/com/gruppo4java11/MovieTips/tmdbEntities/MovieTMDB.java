@@ -5,6 +5,7 @@ import com.gruppo4java11.MovieTips.deserializers.MovieTMDbDeserializer;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class to save the info from TMDB in a custom movie Object
@@ -86,6 +87,18 @@ public class MovieTMDB {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (getClass() != obj.getClass()) return false;
+        MovieTMDB movie = (MovieTMDB)obj;
+        return this.getId() == movie.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }
 

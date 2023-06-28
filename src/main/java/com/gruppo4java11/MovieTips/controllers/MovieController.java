@@ -171,20 +171,15 @@ public class MovieController {
             @ApiResponse(responseCode = "400", description = "Invalid Name", content = @Content)
     })
     @GetMapping("/tmdb/title/{name}")
-    public ResponseEntity<String> getMovieFromTMDBByName(@Parameter(description = "Name of the movie to retrieve")@PathVariable String name){
+    public ResponseEntity<MovieTMDB> getMovieFromTMDBByName(@Parameter(description = "Name of the movie to retrieve")@PathVariable String name) throws IOException {
         Response response = movieService.getMovieFromTMDBByName(name);
-        String body = "Something went wrong";
-        try{
-            assert response.body() != null;
-            body = response.body().string();
-        }catch (IOException ioException){
-            System.err.println("IOException");
-            ioException.printStackTrace();
-        } catch (NullPointerException nullPointerException){
-            System.err.println("NullPointerException");
-            nullPointerException.printStackTrace();
+        if (response == null || response.body() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(body);
+        ObjectMapper objectMapper = new ObjectMapper();
+        MovieTMDB movie = objectMapper.readValue(response.body().string(), MovieTMDB.class);
+
+        return ResponseEntity.ok(movie);
     }
 
     /**
@@ -226,10 +221,13 @@ public class MovieController {
             @ApiResponse(responseCode = "404", description = "Movie List not found", content = @Content)
     })
     @GetMapping("/now-playing")
-    public ResponseEntity<String> nowPlayingInTheaters() throws IOException {
+    public ResponseEntity<Set<MovieTMDB>> nowPlayingInTheaters() throws IOException {
         Response response = movieService.nowPlayingInTheaters();
-        assert response.body() != null;
-        return ResponseEntity.ok(response.body().string());
+        if(response.body() == null) {
+            return ResponseEntity.internalServerError().build();
+        }
+        Set<MovieTMDB> movieList = movieService.deserializeMovieJsonList(response);
+        return ResponseEntity.ok(movieList);
     }
 
     /**
@@ -274,7 +272,8 @@ public class MovieController {
         if(!movieService.checkIfTmdbIdIsInJson(id)){
             return ResponseEntity.badRequest().build();
         }
-        Set<MovieTMDB> recommendedMovies = movieService.deserializeRecommendedMovies(id);
+        Response response = movieService.getRecommendedMovies(id);
+        Set<MovieTMDB> recommendedMovies = movieService.deserializeMovieJsonList(response);
         return ResponseEntity.ok(recommendedMovies);
     }
 

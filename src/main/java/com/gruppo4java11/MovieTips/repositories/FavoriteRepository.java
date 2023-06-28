@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Repository of Favorites entity
  */
@@ -26,5 +28,7 @@ public interface FavoriteRepository extends JpaRepository<Favorite,Long> {
 
     @Query(value = "select Max(id) from Favorite")
     Long getHighestID();
+
+    @Query(value = "select f from Favorite f where f.account.id = :accountId")
+    List<Favorite> findFavoriteByAccountId(@Param(value = "accountId")Long accountId);
 }
-//:#{#role}

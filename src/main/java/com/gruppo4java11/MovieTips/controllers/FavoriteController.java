@@ -2,11 +2,13 @@ package com.gruppo4java11.MovieTips.controllers;
 
 import com.gruppo4java11.MovieTips.entities.Account;
 import com.gruppo4java11.MovieTips.entities.Favorite;
+import com.gruppo4java11.MovieTips.entities.Movie;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.AccountRepository;
 import com.gruppo4java11.MovieTips.repositories.FavoriteRepository;
 import com.gruppo4java11.MovieTips.services.FavoriteService;
 import com.gruppo4java11.MovieTips.services.MovieService;
+import com.gruppo4java11.MovieTips.tmdbEntities.MovieTMDB;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,8 +22,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Controller of the favorites entities
@@ -210,5 +214,28 @@ public class FavoriteController {
         else favoriteToChange.setRecordStatus(RecordStatus.ACTIVE);
         favoriteRepository.updateStatusById(favoriteToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Favorite with id " + id + " Status Updated to " + favoriteToChange.getRecordStatus());
+    }
+
+    /**
+     *
+     * @param id account's id
+     * @return Suggested set of Movies based on the account's favorite
+     * @throws IOException
+     */
+    @Operation(summary = "Get recommended movies based on account's favorite list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recommended movies successfully returned",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Movie.class)) }),
+            @ApiResponse(responseCode = "404", description = "Account not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
+    @GetMapping("/recommended-movies/{id}")
+    public ResponseEntity<Set<MovieTMDB>> getRecommendedMoviesForTheAccount(@Parameter(description = "Id of the account") @PathVariable Long id) throws IOException {
+        Set<MovieTMDB> recommendedMovies = favoriteService.getRecommendedMoviesByFavorites(id);
+        if (recommendedMovies == null){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(recommendedMovies);
     }
 }

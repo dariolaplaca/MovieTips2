@@ -162,8 +162,7 @@ public class MovieService {
         return response;
     }
 
-    public Set<MovieTMDB> deserializeRecommendedMovies(Integer TMDbID) throws IOException {
-        Response response = getRecommendedMovies(TMDbID);
+    public Set<MovieTMDB> deserializeMovieJsonList(Response response) throws IOException {
         Set<MovieTMDB> finalList = new HashSet<>();
         if (response.body() != null) {
             ObjectMapper objectMapper = new ObjectMapper();
@@ -177,6 +176,14 @@ public class MovieService {
             }
         }
         return finalList;
+    }
+
+    public MovieTMDB deserializeMovieJson(Response response) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        if (response.body() == null) {
+            return null;
+        }
+        return objectMapper.readValue(response.body().string(), MovieTMDB.class);
     }
 
 
