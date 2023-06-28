@@ -1,6 +1,7 @@
 package com.gruppo4java11.MovieTips.entities;
 
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,15 +15,20 @@ import java.time.LocalDateTime;
  */
 @MappedSuperclass
 public class AuditableEntity {
+    @Hidden
     @Column(name = "record_status")
     @Enumerated(EnumType.STRING)
     private RecordStatus recordStatus;
+    @Hidden
     @Column(name = "modified_by")
     private String modifiedBy;
+    @Hidden
     @Column(name = "created_by")
     private String createdBy;
+    @Hidden
     @Column(name = "modified_on")
     private LocalDateTime modifiedOn;
+    @Hidden
     @Column(name = "created_on")
     private LocalDateTime createdOn;
 

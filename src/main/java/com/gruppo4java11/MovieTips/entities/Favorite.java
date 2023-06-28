@@ -1,5 +1,6 @@
 package com.gruppo4java11.MovieTips.entities;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Where;
 
@@ -10,6 +11,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "favorites")
 public class Favorite extends AuditableEntity {
+    @Hidden
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

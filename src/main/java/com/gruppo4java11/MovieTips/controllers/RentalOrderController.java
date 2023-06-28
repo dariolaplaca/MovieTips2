@@ -60,7 +60,7 @@ public class RentalOrderController {
                             schema = @Schema(implementation = RentalOrder.class)) })
     })
     @PostMapping("/create")
-    public ResponseEntity<String> createRentalOrder(@Parameter(description = "Body of the order to add") @RequestParam Long movieID, @Parameter(description = "Name of the user that is adding the order")@RequestParam Integer rentalDays, @Parameter(description = "ID of the user's account")@RequestParam Long accountId, @Parameter(description = "Name of the user that is performing the creation") @RequestParam String username) {
+    public ResponseEntity<String> createRentalOrder(@Parameter(description = "Id of the movie to rent") @RequestParam Long movieID, @Parameter(description = "How many days the movie is rented")@RequestParam Integer rentalDays, @Parameter(description = "ID of the user's account")@RequestParam Long accountId, @Parameter(description = "Name of the user that is performing the creation") @RequestParam String username) {
         RentalOrder rentalOrder = accountService.confirmRentalOrder(movieID, rentalDays, accountId);
         rentalOrder.setCreatedBy(username);
         rentalOrder.setCreatedOn(LocalDateTime.now());
