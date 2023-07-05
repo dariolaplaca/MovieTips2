@@ -32,6 +32,7 @@ import java.util.Set;
  * Controller of the movie entities
  */
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/movie")
 @Tag(name = "Movies API")
 public class MovieController {
@@ -75,6 +76,7 @@ public class MovieController {
      * This mapping retrieves all the movies from the database
      * @return a list of the all movies in the database
      */
+    @CrossOrigin(value = "http//localhost:4200")
     @Operation(summary = "Get all Movies")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All Movies successfully retrieved",
@@ -187,6 +189,7 @@ public class MovieController {
      * @param id the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
+    @CrossOrigin(value = "http//localhost:4200")
     @Operation(summary = "Get movies info from the external database through TMDb API by its id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TMDb Movie successfully retrieved",
@@ -213,6 +216,7 @@ public class MovieController {
      * @return  ResponseEntity containing the list of movies currently playing in theaters
      * @throws IOException
      */
+    @CrossOrigin(value = "http//localhost:4200")
     @Operation(summary = "Get all the info of the movies that are currently in theaters")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Movie in theaters list successfully retrieved",

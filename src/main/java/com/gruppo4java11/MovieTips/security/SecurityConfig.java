@@ -2,13 +2,17 @@ package com.gruppo4java11.MovieTips.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
 @EnableWebSecurity
@@ -33,10 +37,11 @@ public class SecurityConfig {
     SecurityFilterChain web(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> {
                     try {
-                        authorize.requestMatchers("/api/**").hasRole("ADMIN")
-                                .anyRequest().authenticated()
-                                .and().httpBasic();
-                        http.csrf().disable();
+                                http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
+                                .authorizeHttpRequests(auth -> auth
+                                        .requestMatchers("/**").permitAll()
+                                        .anyRequest().authenticated()
+                                );
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
@@ -45,5 +50,6 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }
 
