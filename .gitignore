@@ -33,3 +33,4 @@ build/
 .vscode/
 /src/main/resources/application.properties
 /src/main/java/com/gruppo4java11/MovieTips/security/Tokens.java
+!/src/main/resources/static/

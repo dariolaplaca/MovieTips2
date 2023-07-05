@@ -1,0 +1,84 @@
+$primary-color: #252422;
+$secondary-color: #fffcf2;
+$accent-color: #eb5e28;
+
+
+.movie-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $secondary-color;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100vh;
+  text-align: center;
+}
+
+.movie-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: $primary-color;
+}
+
+.movie-info {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.movie-poster {
+  max-width: 350px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.movie-description {
+  color: $primary-color;
+}
+
+.movie-description p {
+  font-size: 22px;
+  margin-bottom: 40px;
+  margin-top: 40px;
+}
+
+.genre-list {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 50;
+  display: flex;
+  justify-content: center;
+  align-self: left;
+  margin-top: auto;
+}
+
+.genre {
+  display: inline-block;
+  background-color: $accent-color;
+  color: $secondary-color;
+  padding: 5px 10px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  font-size: 14px;
+  border-radius: 3px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      text-align: center;
+}
+
+input[type=number]
+{
+  appearance: none;
+}
+
+input[type=number]:focus {
+  border: 3px solid #555;
+}
