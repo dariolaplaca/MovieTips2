@@ -1,6 +1,6 @@
 <h1 class="movie-title">Now Playing in Movie Theaters</h1>
 <button class="genre" (click)="toggleHide()">Show</button>
-<div *ngIf="movieList && isHidden">
+<div *ngIf="movieList && !isHidden">
   <div *ngFor="let movie of movieList" class="movie-container">
     <h2 class="movie-title">{{movie.title}}</h2>
     <div class="movie-info">

@@ -19,5 +19,10 @@ export class MovieService {
     const finalurl = `${this.url}/api/movie/now-playing`
     return this.http.get(finalurl);
   };
+
+  getRecommended(account_id: number) {
+    const finalurl = `${this.url}/api/favorites/recommended-movies/${account_id}`;
+    return this.http.get(finalurl);
+  }
 }
 

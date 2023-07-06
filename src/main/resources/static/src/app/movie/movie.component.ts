@@ -11,19 +11,24 @@ export class MovieComponent implements OnInit {
 
   tmdb_id: number = 0;
   movie : any;
+  isHidden : boolean = true;
 
   constructor (private movieService: MovieService) { }
 
   ngOnInit() : void {
   }
 
-  toggle(){
+  getInfo(){
     let myValue = (<HTMLInputElement>document.getElementById("tmdbId")).value;
     this.tmdb_id = <number><unknown>myValue;
 
     this.movieService.getMovieData(this.tmdb_id).subscribe(
       (response) => { this.movie = response; },
       (error) => { console.log(error); });
+  }
+
+  toggleHide() : void{
+    this.isHidden = !this.isHidden;
   }
 
 }

@@ -9,7 +9,7 @@ import { MovieService } from '../movie.service';
 })
 export class NowPlayingComponent implements OnInit {
   movieList : any = [];
-  isHidden : boolean = false;
+  isHidden : boolean = true;
   constructor (private movieService: MovieService) { }
 
   ngOnInit(){
