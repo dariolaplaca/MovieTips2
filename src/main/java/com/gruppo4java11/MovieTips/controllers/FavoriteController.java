@@ -89,6 +89,7 @@ public class FavoriteController {
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
+    @Tag(name = "A - DEMO")
     @Operation(summary = "Create a new Favorite for the Specified Account by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Favorite Successfully created",
@@ -222,7 +223,9 @@ public class FavoriteController {
      * @return Suggested set of Movies based on the account's favorite
      * @throws IOException
      */
+    @CrossOrigin(value = "http//localhost:4200")
     @Operation(summary = "Get recommended movies based on account's favorite list")
+    @Tag(name = "A - DEMO")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recommended movies successfully returned",
                     content = { @Content(mediaType = "application/json",

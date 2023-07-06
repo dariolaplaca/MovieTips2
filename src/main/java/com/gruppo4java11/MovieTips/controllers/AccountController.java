@@ -54,6 +54,7 @@ public class AccountController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = Account.class)) })
     })
+    @Tag(name = "A - DEMO")
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@Parameter(description = "Body of the account to create") @RequestBody Account account, @Parameter(description = "Name of the user that is creating the account") @RequestParam String username) {
         account.setCreatedOn(LocalDateTime.now());

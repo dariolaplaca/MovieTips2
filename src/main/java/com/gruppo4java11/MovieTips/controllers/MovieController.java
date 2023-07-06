@@ -103,6 +103,7 @@ public class MovieController {
                             schema = @Schema(implementation = Movie.class)) })
 
     })
+    @Tag(name = "A - DEMO")
     @PostMapping("/create")
     public ResponseEntity<String> addMovie(@Parameter(description = "Movie body with all the parameters")@RequestBody Movie movie, @Parameter(description = "Name of the user that is creating a new Movie")@RequestParam String username){
         movie.setCreatedBy(username);
@@ -189,6 +190,7 @@ public class MovieController {
      * @param id the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
+    @Tag(name = "A - DEMO")
     @CrossOrigin(value = "http//localhost:4200")
     @Operation(summary = "Get movies info from the external database through TMDb API by its id")
     @ApiResponses(value = {
@@ -217,6 +219,7 @@ public class MovieController {
      * @throws IOException
      */
     @CrossOrigin(value = "http//localhost:4200")
+    @Tag(name = "A - DEMO")
     @Operation(summary = "Get all the info of the movies that are currently in theaters")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Movie in theaters list successfully retrieved",

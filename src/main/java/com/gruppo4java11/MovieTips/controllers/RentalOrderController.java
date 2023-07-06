@@ -53,6 +53,7 @@ public class RentalOrderController {
      * @param username Username of the user's account
      * @return Response entity indicating the success of the created order
      */
+    @Tag(name = "A - DEMO")
     @Operation(summary = "Create a new Order")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Order successfully created",
@@ -93,6 +94,7 @@ public class RentalOrderController {
      * @param rentalOrderId The ID of the specific rental order that was made by the user
      * @return a Response entity that confirms whether the payment was successful or not.
      */
+    @Tag(name = "A - DEMO")
     @Operation(summary = "TEST to see Penalty in action")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payment went through successfully",
