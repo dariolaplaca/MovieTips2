@@ -1,0 +1,92 @@
+<h1>Registration Form</h1>
+<mat-grid-list cols="1" rowHeight="300px">
+  <mat-grid-tile>
+    <div class="example-container">
+      <mat-form-field appearance="fill" class="width-50">
+        <mat-label>First Name</mat-label>
+        <input matInput id="firstName">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="width-50 ml-2">
+        <mat-label>Surname</mat-label>
+        <input matInput id="surname">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill" class="width-100">
+        <mat-label>Email address</mat-label>
+        <input matInput id="email" placeholder="Ex. develhope@example.com">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="width-100">
+        <mat-label>Enter password</mat-label>
+        <input matInput id="password" [type]="hide ? 'password' : 'text'">
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <mat-label>Date of Birth</mat-label>
+        <input matInput id="birthday" [matDatepicker]="picker">
+        <mat-hint>YYYY-MM-DD</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div class="d-flex justify-content-center">
+  <button (click)="register()" type="button" class="btn btn-primary btn-lg">Register</button>
+</div>
+<br>
+<br>
+<br>
+<h1>Accounts</h1>
+<div *ngIf="accountList.length > 0">
+  <table class = "account_table">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Surname</th>
+      <th>Email</th>
+      <th>Password</th>
+      <th>Date Of Birth</th>
+    </tr>
+    <tr *ngFor="let account of accountList; let i = index">
+      <td>{{ account.id }}</td>
+      <td>{{ account.name }}</td>
+      <td>{{ account.surname }}</td>
+      <td>{{ account.email }}</td>
+      <td>{{ account.password }}</td>
+      <td>{{ account.birthday }}</td>
+    </tr>
+  </table>
+</div>
+<br>
+<br>
+<div class="d-flex justify-content-center">
+  <button (click)="getInfo()" type="button" class="btn btn-primary btn-lg">Refresh</button>
+</div>
+<br>
+<br>
+<br>
+<div>
+  <h1>Add a Movie to Favorite</h1>
+  <mat-grid-list cols="1" rowHeight="200px">
+    <mat-grid-tile>
+      <div class="example-container">
+        <mat-form-field appearance="fill" class="width-50">
+          <mat-label>Account Id</mat-label>
+          <input matInput id="account_id">
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill" class="width-50">
+          <mat-label>Movie Id (Ex. 22 or 603)</mat-label>
+          <input matInput id="movie_to_favorite">
+        </mat-form-field>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
+<div class="d-flex justify-content-center">
+  <button (click)="addFavorite()" type="button" class="btn btn-primary btn-lg">Add</button>
+</div>

@@ -10,7 +10,10 @@ import { MovieService } from '../movie.service';
 export class MovieComponent implements OnInit {
 
   tmdb_id: number = 0;
-  movie : any;
+  movieTitle: string = "";
+  movieTitles : any[] = [];
+  movieById : any;
+  movieByName : any;
   isHidden : boolean = true;
 
   constructor (private movieService: MovieService) { }
@@ -23,12 +26,20 @@ export class MovieComponent implements OnInit {
     this.tmdb_id = <number><unknown>myValue;
 
     this.movieService.getMovieData(this.tmdb_id).subscribe(
-      (response) => { this.movie = response; },
+      (response) => { this.movieById = response; },
+      (error) => { console.log(error); });
+  }
+
+  getInfoByName(){
+    let myValue = (<HTMLInputElement>document.getElementById("movieName")).value;
+    this.movieTitle = myValue;
+
+    this.movieService.getMovieDataByName(this.movieTitle).subscribe(
+      (response) => { this.movieByName = response; },
       (error) => { console.log(error); });
   }
 
   toggleHide() : void{
     this.isHidden = !this.isHidden;
   }
-
 }

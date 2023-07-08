@@ -1,22 +1,35 @@
-<h1 class="movie-title">Search a Film by it's ID</h1>
-<button class="genre" (click)="toggleHide()">Show</button>
-<div *ngIf="!isHidden">
-  <div *ngIf="movie" class="movie-container">
-    <h1 class="movie-title">{{movie.title}}</h1>
-    <div class="movie-info">
-      <img alt="Movie Poster" class="movie-poster" src="https://image.tmdb.org/t/p/original/{{movie.posterPath}}">
-      <div class="movie-description">
-        <ul class="genre-list">
-          <li *ngFor="let genre of movie.genres" class="genre">{{genre.name}}</li>
-        </ul>
-        <p class="movie-description">{{movie.description}}</p>
-      </div>
+<h1 class="movie-title">Search a Film by its ID</h1>
+<div *ngIf="movieById" class="movie-container">
+  <h1 class="movie-title">{{movieById.title | uppercase}} ({{movieById.releaseDate | date : "y"}})</h1>
+  <div class="movie-info">
+    <img alt="Movie Poster" class="movie-poster" src="https://image.tmdb.org/t/p/original/{{movieById.posterPath}}">
+    <div class="movie-description">
+      <ul class="genre-list">
+        <li *ngFor="let genre of movieById.genres" class="genre">{{genre.name}}</li>
+      </ul>
+      <p class="movie-description">{{movieById.description}}</p>
     </div>
   </div>
+</div>
+<div class="movie-info">
+  <form method="dialog">
+    <input type="number" id="tmdbId" name="myId" placeholder="TMDB Movie ID" (keyup.enter)="getInfo()">
+  </form>
+</div>
+
+<h1 class="movie-title">Search a Film by its Name</h1>
+<div *ngIf="movieByName" class="movie-container">
+  <h1 class="movie-title">{{movieByName.title | uppercase}} ({{movieByName.releaseDate | date : "y"}})</h1>
   <div class="movie-info">
-    <button (click)="getInfo()">Get Info</button>
-    <form method="dialog">
-      <input type="number" id="tmdbId" name="myId" placeholder="TMDB Movie ID" (keyup.enter)="getInfo()">
-    </form>
+    <img alt="Movie Poster" class="movie-poster" src="https://image.tmdb.org/t/p/original/{{movieByName.posterPath}}">
+    <div class="movie-description">
+      <ul class="genre-list">
+        <li *ngFor="let genre of movieByName.genres" class="genre">{{genre.name}}</li>
+      </ul>
+      <p class="movie-description">{{movieByName.description}}</p>
+    </div>
   </div>
+</div>
+<div class="movie-info">
+  <input placeholder="Movie Title" (keyup.enter)="getInfoByName()" type="text" datasets="jsonData" options="options" ng-model="model" editable="editable" id="movieName" sf-typeahead />
 </div>

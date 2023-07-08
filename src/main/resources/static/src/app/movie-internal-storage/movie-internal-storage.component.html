@@ -1,0 +1,53 @@
+<h1>Internal Storage</h1>
+<div *ngIf="movieStorage.length > 0">
+  <table class="movie_table">
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>TMDB ID</th>
+      <th>Cost per Day</th>
+      <th>Stock Quantity</th>
+    </tr>
+    <tr *ngFor="let movie of movieStorage; let i = index">
+      <td>{{ movie.id }}</td>
+      <td>{{ movie.name }}</td>
+      <td>{{ movie.tmdbId }}</td>
+      <td>{{ movie.costPerDay }}</td>
+      <td>{{ movie.stockQuantity }}</td>
+    </tr>
+  </table>
+</div>
+<br>
+<div class="d-flex justify-content-center">
+  <button (click)="getInfo()" type="button" class="btn btn-primary btn-lg">Refresh</button>
+</div>
+<br>
+<br>
+<h1>Add a movie to Internal Storage</h1>
+<mat-grid-list cols="1" rowHeight="300px">
+  <mat-grid-tile>
+    <div class="example-container">
+      <mat-form-field appearance="fill" class="width-50">
+        <mat-label>Movie Title</mat-label>
+        <input matInput id="movie-title" placeholder="Ex. The Matrix">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="width-50 ml-2">
+        <mat-label>TMDB ID</mat-label>
+        <input matInput id="tmdb-id" placeholder="Ex. 603">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill" class="width-100">
+        <mat-label>Cost Per Day</mat-label>
+        <input matInput id="cost-per-day" placeholder="Ex. 1.5">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="width-100">
+        <mat-label>Stock Quantity</mat-label>
+        <input matInput id="stock-quantity" placeholder="Ex. 10">
+      </mat-form-field>
+      <br>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div class="d-flex justify-content-center">
+  <button (click)="addMovieToStorage()" type="button" class="btn btn-primary btn-lg">Add To Storage</button>
+</div>

@@ -1,0 +1,19 @@
+$primary-color: #252422;
+$secondary-color: #fffcf2;
+$accent-color: #eb5e28;
+
+h1{
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: $primary-color;
+}
+
+table {
+  table-layout: auto;
+  width: 100%;
+  max-width: 1200px;
+  color: #252422;
+  border: #eb5e28 solid 1px;
+  align-self: center;
+}
