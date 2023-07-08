@@ -93,6 +93,7 @@ public class MovieController {
      * @param movie movie to be created
      * @return ResponseEntity indicating the success of the movie creation
      */
+    @CrossOrigin("http//localhost:4200")
     @Operation(summary = "Add a new Movie")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Movie successfully added",
@@ -134,7 +135,7 @@ public class MovieController {
     public ResponseEntity<String> updateMovie(@Parameter(description = "Movie body with all the parameters")@RequestBody Movie movie, @Parameter(description = "Id of the movie to update")@PathVariable long id, @Parameter(description = "Name of the user that is updating the movie")@RequestParam String username){
         Movie movieFromDB = movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie does not exist!"));
         movieFromDB.setCostPerDay(movie.getCostPerDay());
-        movieFromDB.setTmbdId(movie.getTmbdId());
+        movieFromDB.setTmdbId(movie.getTmdbId());
         movieFromDB.setStockQuantity(movie.getStockQuantity());
         movieFromDB.setModifiedBy(username);
         movieFromDB.setModifiedOn(LocalDateTime.now());
@@ -165,6 +166,7 @@ public class MovieController {
      * @param name the name of the movie to search for on TMDB
      * @return ResponseEntity containing the movie information retrieved from TMDB
      */
+    @CrossOrigin("http//localhost:4200")
     @Operation(summary = "Get movies info from the external database through TMDb API by name")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "TMDb Movie successfully retrieved",

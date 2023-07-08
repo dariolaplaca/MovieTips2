@@ -30,6 +30,7 @@ import java.util.Optional;
  * Controller of the account entities
  */
 @RestController
+@CrossOrigin("http//localhost:4200")
 @RequestMapping("/api/account")
 @Tag(name = "Accounts API")
 public class AccountController {
@@ -48,6 +49,7 @@ public class AccountController {
      * @param account account to add in the database
      * @return Response Entity of String depending on the http status
      */
+    @CrossOrigin("http//localhost:4200")
     @Operation(summary = "Create a new account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Account successfully created",
@@ -69,6 +71,7 @@ public class AccountController {
      * This mapping retrieves all the accounts from the database
      * @return List of accounts retrieved from the database
      */
+    @CrossOrigin("http//localhost:4200")
     @Operation(summary = "Get all Accounts")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All accounts successfully retrieved",

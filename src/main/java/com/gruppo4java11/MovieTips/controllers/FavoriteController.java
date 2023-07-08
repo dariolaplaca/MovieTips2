@@ -30,6 +30,7 @@ import java.util.Set;
 /**
  * Controller of the favorites entities
  */
+@CrossOrigin("http//localhost:4200")
 @RestController
 @RequestMapping("/api/favorites")
 @Tag(name = "Favorites API")
@@ -89,6 +90,7 @@ public class FavoriteController {
      * @param account_id The ID of the account to which the favorite will be added
      * @return ResponseEntity indicating the success status of the operation
      */
+    @CrossOrigin("http//localhost:4200")
     @Tag(name = "A - DEMO")
     @Operation(summary = "Create a new Favorite for the Specified Account by ID")
     @ApiResponses(value = {

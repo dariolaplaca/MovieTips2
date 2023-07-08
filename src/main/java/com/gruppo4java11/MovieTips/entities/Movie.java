@@ -19,7 +19,7 @@ public class Movie extends AuditableEntity {
     @Column(nullable = false, name = "name")
     private String name;
     @Column(nullable = false, unique = true, name = "tmdb_id")
-    private Integer tmbdId;
+    private Integer tmdbId;
     @Column(nullable = false, name = "cost_per_day")
     private Double costPerDay;
     @Column(name = "stock_quantity")
@@ -33,10 +33,10 @@ public class Movie extends AuditableEntity {
      * @param costPerDay daily cost for renting the movie
      * @param stockQuantity how many of each movie we have in "stock" in our "storefront"
      */
-    public Movie(Long id, String name, int tmbdId, double costPerDay, int stockQuantity) {
+    public Movie(Long id, String name, int tmdbId, double costPerDay, int stockQuantity) {
         this.id = id;
         this.name = name;
-        this.tmbdId = tmbdId;
+        this.tmdbId = tmdbId;
         this.costPerDay = costPerDay;
         this.stockQuantity = stockQuantity;
     }
@@ -60,12 +60,12 @@ public class Movie extends AuditableEntity {
         this.name = name;
     }
 
-    public int getTmbdId() {
-        return this.tmbdId;
+    public int getTmdbId() {
+        return this.tmdbId;
     }
 
-    public void setTmbdId(int tmbdId) {
-        this.tmbdId = tmbdId;
+    public void setTmdbId(int tmdbId) {
+        this.tmdbId = tmdbId;
     }
 
     public double getCostPerDay() {
