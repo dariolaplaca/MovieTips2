@@ -1,1 +1,86 @@
-<p>rental-order works!</p>
+<h1>Rental Orders</h1>
+<div *ngIf="ordersList.length > 0">
+  <table class="movie_table">
+    <tr>
+      <th>ID</th>
+      <th>Movie Internal ID</th>
+      <th>Movie Title</th>
+      <th>Account ID</th>
+      <th>Customer Name</th>
+      <th>Order placed on</th>
+      <th>Expected to return by</th>
+      <th>Order Status</th>
+
+    </tr>
+    <tr *ngFor="let order of ordersList; let i = index">
+      <td>{{ order.id }}</td>
+      <td>{{ order.movie.id }}</td>
+      <td>{{ order.movie.name }}</td>
+      <td>{{ order.account.id }}</td>
+      <td>{{ order.account.name + " " + order.account.surname}}</td>
+      <td>{{ order.orderTime }}</td>
+      <td>{{ order.returnTime }}</td>
+      <td>{{ order.orderStatus }}</td>
+    </tr>
+  </table>
+</div>
+<br>
+<div class="d-flex justify-content-center">
+  <button (click)="getAllOrdersData()" type="button" class="btn btn-primary btn-lg">Refresh</button>
+</div>
+<br>
+<br>
+<h1>Add a movie to Internal Storage</h1>
+<mat-grid-list cols="1" rowHeight="300px">
+  <mat-grid-tile>
+    <div class="example-container">
+      <mat-form-field appearance="fill" class="width-50">
+        <mat-label>Movie Internal ID</mat-label>
+        <input matInput id="movie-internal-id" placeholder="Ex. 1">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="width-50 ml-2">
+        <mat-label>Account ID</mat-label>
+        <input matInput id="account-id" placeholder="Ex. 1">
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill" class="width-100">
+        <mat-label>Days of Rental</mat-label>
+        <input matInput id="rental-days" placeholder="Ex. 7">
+      </mat-form-field>
+      <br>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div class="d-flex justify-content-center">
+  <button (click)="addNewOrder()" type="button" class="btn btn-primary btn-lg">Add Order</button>
+</div>
+<br>
+<br>
+<br>
+<h1>Checkouts</h1>
+<mat-grid-list cols="1" rowHeight="100px">
+  <mat-grid-tile>
+    <div class="example-container">
+      <mat-form-field appearance="fill" class="width-50">
+        <mat-label>Order ID</mat-label>
+        <input matInput id="order-id" placeholder="Ex. 1">
+      </mat-form-field>
+      <br>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
+<div class="d-flex justify-content-center">
+  <button id = "checkoutButton" (click)="proceedCheckout()" type="button" class="btn btn-primary btn-lg">Proceed Checkout</button>
+
+  <button id = "checkoutButton" (click)="proceedFutureCheckout()" type="button" class="btn btn-primary btn-lg">Proceed Future Checkout</button>
+</div>
+
+<div class="d-flex justify-content-center">
+  <span *ngIf = "checkout" class = "checkout">{{checkout}}</span>
+  <span *ngIf = "futureCheckout" class = "checkout">{{futureCheckout}}</span>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />

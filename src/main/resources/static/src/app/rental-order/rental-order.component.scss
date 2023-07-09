@@ -1,0 +1,53 @@
+$primary-color: #252422;
+$secondary-color: #fffcf2;
+$accent-color: #eb5e28;
+
+h1{
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: $primary-color;
+}
+
+table {
+  table-layout: auto;
+  width: 100%;
+  max-width: 1200px;
+  color: #252422;
+  border: #eb5e28 solid 1px;
+  align-self: center;
+}
+
+.checkouts{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: $secondary-color;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0px;
+  text-align: center;
+}
+
+.checkout {
+  margin-left: 40px;
+  margin-right: 40px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-bottom: 15px;
+  margin-bottom: 30px;
+  display: inline-block;
+  align-self: center;
+  color: $accent-color;
+  background-color: $primary-color;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+#checkoutButton{
+  display: inline-block;
+  margin: 20px;
+  padding: 20px;
+}

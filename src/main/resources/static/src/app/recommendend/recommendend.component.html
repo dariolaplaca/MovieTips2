@@ -49,9 +49,14 @@
     </div>
   </div>
 </div>
-<div class="movie-container">
-  <button (click)="getRecommended()">Get Recommended</button>
-  <form method="dialog">
-    <input type="number" id="account_id" name="myId" placeholder="Account ID" (keyup.enter)="getRecommended()">
-  </form>
+<div class="buttonAndForm">
+  <div class="example-container">
+    <mat-form-field appearance="fill" class="width-50">
+      <mat-label>Account ID</mat-label>
+      <input type="number" matInput id="account_id" placeholder="Ex. 1">
+    </mat-form-field>
+    <br>
+  </div>
+  <button id = "checkoutButton" (click)="getRecommended()" type="button" class="btn btn-primary btn-lg">Get Recommended</button>
 </div>
+

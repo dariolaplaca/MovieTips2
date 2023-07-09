@@ -1,6 +1,6 @@
 <h1 class="movie-title">Search a Film by its ID</h1>
 <div *ngIf="movieById" class="movie-container">
-  <h1 class="movie-title">{{movieById.title | uppercase}} ({{movieById.releaseDate | date : "y"}})</h1>
+  <h1 class="movie-title">{{movieById.title}} ({{movieById.releaseDate | date : "y"}})</h1>
   <div class="movie-info">
     <img alt="Movie Poster" class="movie-poster" src="https://image.tmdb.org/t/p/original/{{movieById.posterPath}}">
     <div class="movie-description">
@@ -19,7 +19,7 @@
 
 <h1 class="movie-title">Search a Film by its Name</h1>
 <div *ngIf="movieByName" class="movie-container">
-  <h1 class="movie-title">{{movieByName.title | uppercase}} ({{movieByName.releaseDate | date : "y"}})</h1>
+  <h1 class="movie-title">{{movieByName.title}} ({{movieByName.releaseDate | date : "y"}})</h1>
   <div class="movie-info">
     <img alt="Movie Poster" class="movie-poster" src="https://image.tmdb.org/t/p/original/{{movieByName.posterPath}}">
     <div class="movie-description">

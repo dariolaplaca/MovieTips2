@@ -32,5 +32,6 @@ export class MovieService {
     const finalurl = `${this.url}/api/movie/tmdb/title/${movieTitle}`;
     return this.http.get(finalurl);
   }
+
 }
 

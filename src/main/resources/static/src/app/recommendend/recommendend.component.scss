@@ -105,6 +105,16 @@ body {
   border-radius: 3px;
 }
 
+.buttonAndForm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: $secondary-color;
+  padding: 20px;
+  margin: 0;
+  text-align: center;
+}
+
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
       -webkit-appearance: none;

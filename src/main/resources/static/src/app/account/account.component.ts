@@ -46,6 +46,7 @@ export class AccountComponent implements OnInit {
       birthdayDate = birthday
     }
     const requestBody = {
+      id : 0,
       name: firstName,
       surname: surname,
       email: email,
