@@ -74,12 +74,9 @@ public class AccountService {
             rentalOrder.setOrderStatus("IN_PROGRESS");
             rentalOrder.setReturnTime(LocalDateTime.now().plusDays(rentalDays));
             rentalOrder.setAccount(accountRepository.findById(accountId).get());
-
-
-            movie.setStockQuantity(movie.getStockQuantity() - 1);
-            movieRepository.saveAndFlush(movie);
-
-            paymentCheckout(rentalOrder);
+            Movie movieFromRepo = movieRepository.findById(movieID).get();
+            movieFromRepo.setStockQuantity(movie.getStockQuantity() - 1);
+            movieRepository.saveAndFlush(movieFromRepo);
         } else {
             throw new MovieNotFoundException("Movie is currently out of stock");
         }
@@ -92,7 +89,7 @@ public class AccountService {
      * @return
      */
     public double getPenaltyFee (RentalOrder rentalOrder) {
-        if (rentalOrder.getReturnTime().isBefore(LocalDateTime.now()) && rentalOrder.getOrderStatus().equals("IN_PROGRESS")) {
+        if (rentalOrder.getReturnTime().isBefore(LocalDateTime.now())) {
             Long daysBetween = Duration.between(rentalOrder.getReturnTime(), LocalDateTime.now()).toDays();
             return daysBetween * rentalOrder.getMovie().getCostPerDay() * 1.5;
         }
@@ -124,6 +121,14 @@ public class AccountService {
      * @param rentalOrder
      */
     public double paymentCheckout(RentalOrder rentalOrder) {
+        if(!rentalOrder.getOrderStatus().equals("IN_PROGRESS")){
+            return 0;
+        }
+        rentalOrder.setOrderStatus("RETURNED");
+        rentalOrderRepository.saveAndFlush(rentalOrder);
+        Movie movieInStock = movieRepository.findById(rentalOrder.getMovie().getId()).get();
+        movieInStock.setStockQuantity(movieInStock.getStockQuantity() + 1);
+        movieRepository.saveAndFlush(movieInStock);
         if (getPenaltyFee(rentalOrder) > 0 ){
             return getRentalCost(rentalOrder) + getPenaltyFee(rentalOrder);
         }
@@ -131,7 +136,7 @@ public class AccountService {
     }
 
     public double getFuturePenaltyFee (RentalOrder rentalOrder) {
-        if (rentalOrder.getReturnTime().isBefore(LocalDateTime.now().plusDays(10)) && rentalOrder.getOrderStatus().equals("IN_PROGRESS")) {
+        if (rentalOrder.getReturnTime().isBefore(LocalDateTime.now().plusDays(10))) {
             Long daysBetween = Duration.between(rentalOrder.getReturnTime(), LocalDateTime.now().plusDays(10)).toDays();
             return daysBetween * rentalOrder.getMovie().getCostPerDay() * 1.5;
         }
@@ -139,6 +144,14 @@ public class AccountService {
     }
 
     public double futurePaymentCheckout(RentalOrder rentalOrder) {
+        if(!rentalOrder.getOrderStatus().equals("IN_PROGRESS")){
+            return 0;
+        }
+        rentalOrder.setOrderStatus("RETURNED");
+        rentalOrderRepository.saveAndFlush(rentalOrder);
+        Movie movieInStock = movieRepository.findById(rentalOrder.getMovie().getId()).get();
+        movieInStock.setStockQuantity(movieInStock.getStockQuantity() + 1);
+        movieRepository.saveAndFlush(movieInStock);
         if (getFuturePenaltyFee(rentalOrder) > 0 ){
             return getRentalCost(rentalOrder) + getFuturePenaltyFee(rentalOrder);
         }

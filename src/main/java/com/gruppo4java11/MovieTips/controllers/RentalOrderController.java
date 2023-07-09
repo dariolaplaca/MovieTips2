@@ -1,5 +1,6 @@
 package com.gruppo4java11.MovieTips.controllers;
 
+import com.gruppo4java11.MovieTips.dto.ResponseStringDTO;
 import com.gruppo4java11.MovieTips.entities.RentalOrder;
 import com.gruppo4java11.MovieTips.enumerators.RecordStatus;
 import com.gruppo4java11.MovieTips.repositories.RentalOrderRepository;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ import java.util.List;
 /**
  * Controllers of the rental order entities
  */
+@CrossOrigin("http://localhost:4200")
 @RestController
 @RequestMapping("/api/order")
 @Tag(name = "Orders API")
@@ -53,6 +56,7 @@ public class RentalOrderController {
      * @param username Username of the user's account
      * @return Response entity indicating the success of the created order
      */
+    @CrossOrigin("http://localhost:4200")
     @Tag(name = "A - DEMO")
     @Operation(summary = "Create a new Order")
     @ApiResponses(value = {
@@ -67,6 +71,7 @@ public class RentalOrderController {
         rentalOrder.setCreatedOn(LocalDateTime.now());
         rentalOrder.setModifiedBy(username);
         rentalOrder.setModifiedOn(LocalDateTime.now());
+        rentalOrder.setOrderStatus("IN_PROGRESS");
         rentalOrderRepository.saveAndFlush(rentalOrder);
         Long highestId = rentalOrderRepository.getHighestID();
         return ResponseEntity.ok("Order created with id " + highestId);
@@ -77,6 +82,7 @@ public class RentalOrderController {
      * @param rentalOrderId The ID of the specific rental order that was made by the user
      * @return a Response entity that confirms whether the payment was successful or not.
      */
+    @CrossOrigin("http://localhost:4200")
     @Operation(summary = "Proceed to checkout")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Payment went through successfully",
@@ -84,16 +90,23 @@ public class RentalOrderController {
                             schema = @Schema(implementation = RentalOrder.class)) })
     })
     @GetMapping("/checkout")
-    public ResponseEntity<String> paymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
+    public ResponseEntity<ResponseStringDTO> paymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
         Double cost = accountService.paymentCheckout(rentalOrderRepository.findById(rentalOrderId).get());
         Double penaltyFee = accountService.getPenaltyFee(rentalOrderRepository.findById(rentalOrderId).get());
-        return ResponseEntity.ok("Total cost of movie is:  " + cost + " of which " + penaltyFee + " have been added as a penalty fee.");
+        if(cost == 0){
+            ResponseStringDTO response = new ResponseStringDTO("Order Not In Progress!");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String responseString = "Total cost of movie is: " + cost + " of which " + penaltyFee + " have been added as a penalty fee.";
+        ResponseStringDTO response = new ResponseStringDTO(responseString);
+        return ResponseEntity.ok().body(response);
     }
     /**
      * Allows the user to proceed to the checkout screen where the total cost of the rental is calculated whether it was returned on time or if it was returned late, thust applying a penalty fee.
      * @param rentalOrderId The ID of the specific rental order that was made by the user
      * @return a Response entity that confirms whether the payment was successful or not.
      */
+    @CrossOrigin("http://localhost:4200")
     @Tag(name = "A - DEMO")
     @Operation(summary = "TEST to see Penalty in action")
     @ApiResponses(value = {
@@ -102,10 +115,16 @@ public class RentalOrderController {
                             schema = @Schema(implementation = RentalOrder.class)) })
     })
     @GetMapping("/future-checkout")
-    public ResponseEntity<String> futurePaymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
+    public ResponseEntity<ResponseStringDTO> futurePaymentCheckout(@Parameter(description = "The rental order with its respective cost") @RequestParam Long rentalOrderId) {
         Double cost = accountService.futurePaymentCheckout(rentalOrderRepository.findById(rentalOrderId).get());
         Double penaltyFee = accountService.getFuturePenaltyFee(rentalOrderRepository.findById(rentalOrderId).get());
-        return ResponseEntity.ok("Total cost of movie is:  " + cost  + " of which " + penaltyFee + " have been added as a penalty fee.");
+        if(cost == 0){
+            ResponseStringDTO response = new ResponseStringDTO("Order Not In Progress!");
+            return ResponseEntity.badRequest().body(response);
+        }
+        String responseString = "Total cost of movie is: " + cost + " of which " + penaltyFee + " have been added as a penalty fee.";
+        ResponseStringDTO response = new ResponseStringDTO(responseString);
+        return ResponseEntity.ok().body(response);
     }
 
     /**
@@ -113,6 +132,7 @@ public class RentalOrderController {
      * @param id ID of the movie to retrieve
      * @return the rental order with the specified ID, or null if not found
      */
+    @CrossOrigin("http://localhost:4200")
     @Operation(summary = "Get an Order by ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Order successfully retrieved",
@@ -129,6 +149,7 @@ public class RentalOrderController {
      * This mapping retrieves all the rental orders from the database
      * @return a list of all the rental orders
      */
+    @CrossOrigin("http://localhost:4200")
     @Operation(summary = "Get all Orders")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "All orders successfully retrieved",
@@ -211,4 +232,30 @@ public class RentalOrderController {
         rentalOrderRepository.updateStatusById(rentalOrderToChange.getRecordStatus(), id);
         return ResponseEntity.ok("Order with id " + id + " Status Updated to " + rentalOrderToChange.getRecordStatus());
     }
+
+    /**
+     * Sets the status of a rental order identified by the given ID.
+     *
+     * @param id The ID of the rental order to update.
+     * @return A ResponseEntity containing a message indicating the updated status of the rental order.
+     */
+    @Operation(summary = "Set the logical status of an Order's record by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order status successfully changed",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = RentalOrder.class)) }),
+            @ApiResponse(responseCode = "404", description = "Order not found", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content)
+    })
+    @PatchMapping("/return/{id}")
+    public ResponseEntity<String> setOrderToReturned(@Parameter(description = "Id of the order")@PathVariable long id,@Parameter(description = "Name of the user that is changing the status")@RequestParam String username){
+        RentalOrder rentalOrderToChange = rentalOrderRepository.findById(id).orElseThrow(()-> new RuntimeException("Order not found!"));
+        rentalOrderToChange.setOrderStatus("RETURNED");
+        rentalOrderToChange.setModifiedBy(username);
+        rentalOrderToChange.setModifiedOn(LocalDateTime.now());
+        rentalOrderRepository.updateStatusById(rentalOrderToChange.getRecordStatus(), id);
+        return ResponseEntity.ok("Order with id " + id + " Status Updated to " + rentalOrderToChange.getRecordStatus());
+    }
+
+
 }
