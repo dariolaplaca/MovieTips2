@@ -15,6 +15,7 @@ MovieTips is a web application that allows users to explore, rent, and receive m
 
 - Backend: Java, Spring Boot
 - Database: MySQL
-- API Integration: The Movie Database (TMDb) API
+- API Integration: The Movie Database (TMDb) API (You need an API BEARER KEY from the site and set it up as an environment variable named TMDB_API_KEY)
+- Front-End: Angular, BootStrap
 
 
